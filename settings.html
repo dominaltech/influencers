@@ -118,6 +118,24 @@
                 <p style="font-size: 0.88rem; color: var(--text-secondary);">Manage account, notifications, and location preferences.</p>
             </div>
 
+            <!-- Card 0: PWA App Installation -->
+            <div id="settings-pwa-card" style="background: linear-gradient(135deg, rgba(37,99,235,0.08) 0%, rgba(220,39,67,0.08) 100%); border: 1px solid rgba(37,99,235,0.2); border-radius: var(--radius-md); padding: 18px; margin-bottom: 16px; box-shadow: var(--shadow-sm);">
+                <div style="display: flex; align-items: center; justify-content: space-between; gap: 12px;">
+                    <div style="display: flex; align-items: center; gap: 12px;">
+                        <div style="width: 44px; height: 44px; border-radius: var(--radius-md); background: var(--accent-black); display: flex; align-items: center; justify-content: center; color: #fff; flex-shrink: 0;">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <div style="font-weight: 800; font-size: 0.98rem; color: var(--text-primary);">Install CityFame PWA App</div>
+                            <div style="font-size: 0.78rem; color: var(--text-secondary);">Add to Home Screen for fast native access</div>
+                        </div>
+                    </div>
+                    <button onclick="triggerPwaInstall()" id="settings-install-pwa-btn" class="btn-primary btn-sm" style="width: auto; padding: 8px 16px; background: var(--accent-black); color: #fff;">📲 Install App</button>
+                </div>
+            </div>
+
             <!-- Card 1: Active Location / City -->
             <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 18px; margin-bottom: 16px; box-shadow: var(--shadow-sm);">
                 <div style="display: flex; align-items: center; justify-content: space-between;">

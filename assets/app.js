@@ -259,4 +259,45 @@ function setupAppBackHistoryManager() {
 
 document.addEventListener('DOMContentLoaded', setupAppBackHistoryManager);
 
+// 10. Native PWA Install Prompt Capture & Trigger
+let deferredPwaInstallPrompt = null;
+
+window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    deferredPwaInstallPrompt = e;
+    console.log("CityFame PWA: Install prompt captured");
+
+    // Auto trigger prompt banner after 2.5s on home screen if not installed
+    const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
+    if (!isStandalone) {
+        setTimeout(() => {
+            if (deferredPwaInstallPrompt) {
+                const installBtn = document.getElementById('settings-install-pwa-btn');
+                if (installBtn) {
+                    installBtn.style.display = 'inline-flex';
+                }
+            }
+        }, 2500);
+    }
+});
+
+async function triggerPwaInstall() {
+    if (window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone) {
+        showToast("CityFame App is already installed!");
+        return;
+    }
+
+    if (deferredPwaInstallPrompt) {
+        deferredPwaInstallPrompt.prompt();
+        const { outcome } = await deferredPwaInstallPrompt.userChoice;
+        if (outcome === 'accepted') {
+            showToast("CityFame App installed successfully!");
+        }
+        deferredPwaInstallPrompt = null;
+    } else {
+        showToast("To install, open browser menu (⋮) and tap 'Add to Home screen' or 'Install App'.");
+    }
+}
+
+
 

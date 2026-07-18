@@ -291,8 +291,8 @@
         ];
 
         document.addEventListener('DOMContentLoaded', async () => {
-            // Check First Session City Popup
-            if (!sessionStorage.getItem(SESSION_POPUP_KEY)) {
+            // Check First Session City Popup (uses localStorage so it only shows once)
+            if (!localStorage.getItem(SESSION_POPUP_KEY)) {
                 setTimeout(() => {
                     document.getElementById('city-confirm-modal').classList.add('active');
                 }, 300);
@@ -303,7 +303,7 @@
         });
 
         function closeCityModal() {
-            sessionStorage.setItem(SESSION_POPUP_KEY, 'true');
+            localStorage.setItem(SESSION_POPUP_KEY, 'true');
             document.getElementById('city-confirm-modal').classList.remove('active');
         }
 
