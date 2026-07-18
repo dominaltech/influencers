@@ -818,19 +818,10 @@
             box.style.display = 'block';
         }
 
-        async function fetchWorksAndEnquiries() {
-            if (!currentProfile || !currentProfile.id || !window.cityfameSupabase) return;
-
-            // Fetch works
-            const { data: works, error: worksErr } = await window.cityfameSupabase
-                .from('works')
-                .select('*')
-                .eq('influencer_id', currentProfile.id)
-                .order('created_at', { ascending: false });
-
-            if (worksErr) console.warn("Fetch works error:", worksErr);
-
+        function renderWorksHTML(works) {
             const worksContainer = document.getElementById('dash-works-list');
+            if (!worksContainer) return;
+
             if (works && works.length > 0) {
                 let html = '';
                 works.forEach(w => {
@@ -853,22 +844,16 @@
                     `;
                 });
                 worksContainer.innerHTML = html;
-                // Hydrate all Instagram embeds after injecting HTML
                 processInstagramEmbeds();
             } else {
                 worksContainer.innerHTML = `<p style="font-size: 0.82rem; color: var(--text-muted);">No reels added yet. Paste a reel link above to add your first reel!</p>`;
             }
+        }
 
-            // Fetch enquiries
-            const { data: enq, error: enqErr } = await window.cityfameSupabase
-                .from('enquiries')
-                .select('*')
-                .eq('influencer_id', currentProfile.id)
-                .order('created_at', { ascending: false });
-
-            if (enqErr) console.warn("Fetch enquiries error:", enqErr);
-
+        function renderEnquiriesHTML(enq) {
             const enqContainer = document.getElementById('dash-enquiries-list');
+            if (!enqContainer) return;
+
             if (enq && enq.length > 0) {
                 let eHtml = '';
                 enq.forEach(eItem => {
@@ -887,6 +872,65 @@
                 enqContainer.innerHTML = eHtml;
             } else {
                 enqContainer.innerHTML = `<p style="font-size: 0.82rem; color: var(--text-muted);">No brand enquiries received yet.</p>`;
+            }
+        }
+
+        function loadCachedWorksAndEnquiries() {
+            if (!currentProfile || !currentProfile.id) return;
+
+            // 1. Immediately render cached works if present
+            const cachedWorks = localStorage.getItem('cityfame_cached_works_' + currentProfile.id);
+            if (cachedWorks) {
+                try {
+                    const worksArr = JSON.parse(cachedWorks);
+                    renderWorksHTML(worksArr);
+                } catch(e) {}
+            }
+
+            // 2. Immediately render cached enquiries if present
+            const cachedEnq = localStorage.getItem('cityfame_cached_enquiries_' + currentProfile.id);
+            if (cachedEnq) {
+                try {
+                    const enqArr = JSON.parse(cachedEnq);
+                    renderEnquiriesHTML(enqArr);
+                } catch(e) {}
+            }
+        }
+
+        async function fetchWorksAndEnquiries() {
+            if (!currentProfile || !currentProfile.id) return;
+
+            // Step 1: Render cached local data immediately so UI never shows empty states while loading
+            loadCachedWorksAndEnquiries();
+
+            if (!window.cityfameSupabase) return;
+
+            try {
+                // Fetch works in background
+                const { data: works, error: worksErr } = await window.cityfameSupabase
+                    .from('works')
+                    .select('*')
+                    .eq('influencer_id', currentProfile.id)
+                    .order('created_at', { ascending: false });
+
+                if (!worksErr && works) {
+                    localStorage.setItem('cityfame_cached_works_' + currentProfile.id, JSON.stringify(works));
+                    renderWorksHTML(works);
+                }
+
+                // Fetch enquiries in background
+                const { data: enq, error: enqErr } = await window.cityfameSupabase
+                    .from('enquiries')
+                    .select('*')
+                    .eq('influencer_id', currentProfile.id)
+                    .order('created_at', { ascending: false });
+
+                if (!enqErr && enq) {
+                    localStorage.setItem('cityfame_cached_enquiries_' + currentProfile.id, JSON.stringify(enq));
+                    renderEnquiriesHTML(enq);
+                }
+            } catch(err) {
+                console.warn("Background sync works/enquiries error (keeping local cache):", err);
             }
         }
 
