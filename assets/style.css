@@ -299,9 +299,8 @@ html, body {
     font-weight: 700;
     font-size: 1.05rem;
     color: var(--text-primary);
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    white-space: normal;
+    word-break: break-word;
 }
 
 .influencer-handle {
