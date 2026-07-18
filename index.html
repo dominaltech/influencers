@@ -373,37 +373,36 @@
                 const dp = inf.dp_url || 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=300&q=80';
                 
                 html += `
-                    <div class="influencer-card">
+                    <div class="influencer-card" onclick="openProfileModal('${inf.id}')" title="Click to view ${inf.full_name}'s Profile & Reels">
                         <div class="influencer-card-header">
                             <div class="influencer-dp-wrapper">
                                 <img src="${dp}" alt="${inf.full_name}" class="influencer-dp" onerror="this.src='https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=300&q=80'">
                             </div>
                             <div class="influencer-info">
-                                <div class="influencer-name">${inf.full_name}</div>
-                                <a href="https://instagram.com/${handleClean}" target="_blank" class="influencer-handle">
-                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+                                <div class="influencer-name" style="font-size:0.9rem; font-weight:800; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${inf.full_name}</div>
+                                <div class="influencer-handle" style="font-size:0.75rem; color:var(--text-secondary);">
                                     @${handleClean}
-                                </a>
+                                </div>
                             </div>
                         </div>
 
-                        <div class="stats-row">
+                        <div class="stats-row" style="padding:8px 4px;">
                             <div class="stat-item">
-                                <span class="stat-value">${formatCount(inf.followers_count)}</span>
-                                <span class="stat-label">Followers</span>
+                                <span class="stat-value" style="font-size:0.95rem;">${formatCount(inf.followers_count)}</span>
+                                <span class="stat-label" style="font-size:0.65rem;">Followers</span>
                             </div>
                             <div class="stat-item">
-                                <span class="stat-value">${formatCount(inf.avg_views)}</span>
-                                <span class="stat-label">Avg Views</span>
+                                <span class="stat-value" style="font-size:0.95rem;">${formatCount(inf.avg_views)}</span>
+                                <span class="stat-label" style="font-size:0.65rem;">Avg Views</span>
                             </div>
                             <div class="stat-item">
-                                <span class="stat-value">${formatCount(inf.total_views || 0)}</span>
-                                <span class="stat-label">Total Views</span>
+                                <span class="stat-value" style="font-size:0.95rem;">${formatCount(inf.total_views || 0)}</span>
+                                <span class="stat-label" style="font-size:0.65rem;">Total Views</span>
                             </div>
                         </div>
 
-                        <div class="card-actions">
-                            <button class="view-profile-btn" onclick="openProfileModal('${inf.id}')">
+                        <div class="card-actions" style="margin-top:auto;">
+                            <button class="view-profile-btn" style="padding:7px 10px; font-size:0.78rem;">
                                 View Profile & Reels
                             </button>
                         </div>
