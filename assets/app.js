@@ -174,16 +174,29 @@ function renderMediaEmbed(url, workId = null, onDelete = null) {
     if (igMatch && igMatch[1]) {
         const reelId = igMatch[1];
         const uniqueId = 'reel-box-' + Math.random().toString(36).substring(2, 9);
+        const posterUrl = `https://images.weserv.nl/?url=https://instagram.com/p/${reelId}/media/?size=l`;
 
         return `
             <div class="work-item" style="border-radius: var(--radius-md); overflow: hidden; background: #ffffff; border: 1px solid var(--border-color); margin-top: 10px; text-align: center;">
                 <div id="${uniqueId}" style="width: 100%; max-width: 440px; height: 440px; margin: 0 auto; overflow: hidden; position: relative; background: #0f172a; border-radius: 12px 12px 0 0; display: flex; flex-direction: column; align-items: center; justify-content: center; color: #fff; text-align: center; padding: 20px;">
-                    <div style="width: 64px; height: 64px; border-radius: 50%; background: linear-gradient(135deg, #dc2743, #cc2366, #bc1888); display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 4px 15px rgba(220,39,67,0.4); margin-bottom: 12px; transition: transform 0.2s;" onclick="playInlineReel('${uniqueId}', '${reelId}')">
-                        <svg width="32" height="32" viewBox="0 0 24 24" fill="white" style="margin-left: 3px;"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                    <!-- High-Res Reel Cover Thumbnail Background -->
+                    <img src="${posterUrl}" 
+                         onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1611162617474-5b21e879e113?auto=format&fit=crop&w=600&q=80';" 
+                         alt="Reel Preview Poster" 
+                         style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; filter: brightness(0.7); z-index: 1;">
+                    
+                    <!-- Dark Gradient Vignette for Text Legibility -->
+                    <div style="position: absolute; top:0; left:0; width:100%; height:100%; background: linear-gradient(180deg, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.75) 100%); z-index: 2;"></div>
+
+                    <!-- Overlay Play Controls -->
+                    <div style="position: relative; z-index: 3; display: flex; flex-direction: column; align-items: center;">
+                        <div style="width: 68px; height: 68px; border-radius: 50%; background: linear-gradient(135deg, #dc2743, #cc2366, #bc1888); display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 6px 20px rgba(0,0,0,0.5); margin-bottom: 12px; transition: transform 0.2s;" onclick="playInlineReel('${uniqueId}', '${reelId}')">
+                            <svg width="34" height="34" viewBox="0 0 24 24" fill="white" style="margin-left: 3px;"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                        </div>
+                        <div style="font-weight: 800; font-size: 1.05rem; margin-bottom: 4px; text-shadow: 0 2px 4px rgba(0,0,0,0.8);">Instagram Reel</div>
+                        <div style="font-size: 0.8rem; color: #f1f5f9; margin-bottom: 16px; text-shadow: 0 1px 3px rgba(0,0,0,0.8);">Tap Play Reel below to watch inline in browser</div>
+                        <button onclick="playInlineReel('${uniqueId}', '${reelId}')" class="btn-primary btn-sm" style="width: auto; padding: 10px 22px; font-weight: 700; background: linear-gradient(135deg, #2563eb, #1d4ed8); border: none; box-shadow: 0 4px 12px rgba(37,99,235,0.4);">▶ Load & Play Video</button>
                     </div>
-                    <div style="font-weight: 800; font-size: 1rem; margin-bottom: 4px;">Instagram Reel</div>
-                    <div style="font-size: 0.78rem; color: #94a3b8; margin-bottom: 16px;">Tap Play Reel below to watch inline in browser</div>
-                    <button onclick="playInlineReel('${uniqueId}', '${reelId}')" class="btn-primary btn-sm" style="width: auto; padding: 8px 18px; font-weight: 700; background: linear-gradient(135deg, #2563eb, #1d4ed8); border: none;">▶ Load & Play Video</button>
                 </div>
                 <div style="padding: 10px 14px; background: var(--bg-secondary); border-top: 1px solid var(--border-color); display: flex; align-items: center; justify-content: space-between; gap: 10px;">
                     <button onclick="playInlineReel('${uniqueId}', '${reelId}')" class="btn-primary btn-sm" style="flex: 1; font-weight: 700; display: inline-flex; align-items: center; justify-content: center; gap: 6px; background: var(--accent-black); color: #fff;">
