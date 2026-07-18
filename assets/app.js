@@ -186,3 +186,26 @@ function renderMediaEmbed(url, workId = null, onDelete = null) {
         </div>
     `;
 }
+
+// 7. Side Navigation Drawer Helpers
+function openSideDrawer() {
+    const backdrop = document.getElementById('side-drawer-backdrop');
+    if (backdrop) {
+        backdrop.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+}
+
+function closeSideDrawer() {
+    const backdrop = document.getElementById('side-drawer-backdrop');
+    if (backdrop) {
+        backdrop.classList.remove('active');
+        document.body.style.overflow = '';
+    }
+}
+
+// 8. Open Inbox / DMs Helper
+function openEnquiriesPage() {
+    window.location.href = 'enquiries.html';
+}
+

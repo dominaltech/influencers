@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Brand DMs & Inbox - CityFame</title>
+    <meta name="description" content="View brand enquiries and direct messages received from local clients and businesses on CityFame.">
+    <meta name="theme-color" content="#000000">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="manifest" href="manifest.json">
+    <link rel="stylesheet" href="assets/style.css">
+    <!-- Supabase CDN JS SDK -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Top Navbar -->
+        <header class="top-navbar">
+            <div class="nav-header-inner">
+                <div style="display: flex; align-items: center; gap: 12px;">
+                    <button class="icon-btn" onclick="openSideDrawer()" title="Open Navigation Menu" id="hamburger-menu-btn">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/>
+                        </svg>
+                    </button>
+                    <a href="index.html" class="brand-logo">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                            <polygon points="12 2 2 7 12 12 22 7 12 2"/>
+                            <polyline points="2 17 12 22 22 17"/>
+                            <polyline points="2 12 12 17 22 12"/>
+                        </svg>
+                        <div>
+                            <div class="brand-title">CityFame</div>
+                            <div class="brand-subtitle">Brand DMs & Inbox</div>
+                        </div>
+                    </a>
+                </div>
+
+                <!-- Desktop Nav Links -->
+                <nav class="desktop-nav-links">
+                    <a href="index.html">Home Feed</a>
+                    <a href="influencers.html">For Influencers</a>
+                    <a href="enquiries.html" class="active">Brand DMs</a>
+                    <a href="about.html">About Us</a>
+                    <a href="settings.html">Settings</a>
+                </nav>
+
+                <div class="nav-actions">
+                    <button class="icon-btn dm-icon-btn" onclick="fetchEnquiries()" title="Refresh Inbox">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Side Navigation Drawer Overlay -->
+        <div id="side-drawer-backdrop" class="drawer-backdrop" onclick="closeSideDrawer()">
+            <div class="side-drawer" onclick="event.stopPropagation()">
+                <div class="drawer-header">
+                    <div class="drawer-title-group">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                            <polygon points="12 2 2 7 12 12 22 7 12 2"/>
+                            <polyline points="2 17 12 22 22 17"/>
+                            <polyline points="2 12 12 17 22 12"/>
+                        </svg>
+                        <span style="font-weight: 800; font-size: 1.1rem; color: var(--text-primary);">CityFame</span>
+                    </div>
+                    <button class="icon-btn" onclick="closeSideDrawer()">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                    </button>
+                </div>
+                <div class="drawer-body">
+                    <div class="drawer-section-title">Navigation</div>
+                    <a href="index.html" class="drawer-menu-item">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                        Home Feed
+                    </a>
+                    <a href="influencers.html" class="drawer-menu-item">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                        Creator Hub & Login
+                    </a>
+                    <a href="enquiries.html" class="drawer-menu-item active">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+                        Brand DMs & Inbox
+                    </a>
+                    <a href="about.html" class="drawer-menu-item">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+                        About Platform
+                    </a>
+
+                    <div class="drawer-section-title" style="margin-top: 14px;">Preferences</div>
+                    <a href="settings.html" class="drawer-menu-item">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+                        App Settings
+                    </a>
+                    <a href="welcome.html" class="drawer-menu-item">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                        Switch City
+                    </a>
+                </div>
+                <div class="drawer-footer">
+                    <div>CityFame Solapur Edition</div>
+                    <div style="font-size: 0.72rem; color: var(--text-muted); margin-top: 2px;">Powered by Dominal Technology</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px;">
+                <div>
+                    <h1 style="font-size: 1.5rem; font-weight: 800; margin-bottom: 4px;">Client DMs & Inbox</h1>
+                    <p id="inbox-subtitle" style="font-size: 0.85rem; color: var(--text-secondary);">Direct messages from brands and business owners</p>
+                </div>
+                <div id="logged-badge" style="display: none; background: rgba(37,99,235,0.1); border: 1px solid rgba(37,99,235,0.2); color: #2563eb; padding: 4px 10px; border-radius: var(--radius-full); font-size: 0.75rem; font-weight: 700;">
+                    Creator Mode
+                </div>
+            </div>
+
+            <!-- Messages List Container -->
+            <div id="enquiries-container" style="display: flex; flex-direction: column; gap: 14px;">
+                <div style="text-align: center; padding: 40px 20px;">
+                    <div class="skeleton skeleton-avatar" style="width: 48px; height: 48px; margin: 0 auto 12px; border-radius: 50%;"></div>
+                    <div style="color: var(--text-muted); font-size: 0.9rem;">Loading client messages...</div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Fixed Bottom Navigation (Mobile Tab Bar) -->
+        <nav class="bottom-tab-bar">
+            <a href="index.html" class="tab-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                <span>Home</span>
+            </a>
+            <a href="influencers.html" class="tab-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                <span>Creators</span>
+            </a>
+            <a href="enquiries.html" class="tab-item active">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+                <span>Inbox</span>
+            </a>
+            <a href="settings.html" class="tab-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+                <span>Settings</span>
+            </a>
+        </nav>
+    </div>
+
+    <script src="assets/supabase-client.js"></script>
+    <script src="assets/app.js"></script>
+    <script>
+        let currentCreator = null;
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            const savedCreator = localStorage.getItem('cityfame_creator');
+            if (savedCreator) {
+                try {
+                    currentCreator = JSON.parse(savedCreator);
+                    document.getElementById('logged-badge').style.display = 'inline-block';
+                    document.getElementById('inbox-subtitle').innerText = `Inbox for ${currentCreator.full_name || currentCreator.instagram_handle || 'Creator'}`;
+                } catch (e) {}
+            }
+            await fetchEnquiries();
+        });
+
+        async function fetchEnquiries() {
+            const container = document.getElementById('enquiries-container');
+            
+            if (!window.cityfameSupabase) {
+                renderMockEnquiries();
+                return;
+            }
+
+            try {
+                let query = window.cityfameSupabase
+                    .from('enquiries')
+                    .select('*')
+                    .order('created_at', { ascending: false });
+
+                // If logged in creator, filter by their ID
+                if (currentCreator && currentCreator.id) {
+                    query = query.eq('influencer_id', currentCreator.id);
+                }
+
+                const { data: list, error } = await query;
+                if (error) throw error;
+
+                if (list && list.length > 0) {
+                    renderEnquiriesList(list);
+                } else {
+                    container.innerHTML = `
+                        <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 32px 20px; text-align: center;">
+                            <div style="width: 54px; height: 54px; background: rgba(37,99,235,0.1); border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; color: #2563eb; margin-bottom: 12px;">
+                                <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+                            </div>
+                            <h3 style="font-size: 1.1rem; font-weight: 700; margin-bottom: 6px;">No Messages Received Yet</h3>
+                            <p style="font-size: 0.85rem; color: var(--text-secondary); max-width: 320px; margin: 0 auto 16px;">
+                                When brands or business owners send an enquiry from your profile, direct messages will appear here instantly.
+                            </p>
+                            <a href="influencers.html" class="btn-primary btn-sm" style="display: inline-flex; width: auto; text-decoration: none;">Share Profile Link</a>
+                        </div>
+                    `;
+                }
+            } catch (err) {
+                console.warn("Fetch enquiries error:", err);
+                renderMockEnquiries();
+            }
+        }
+
+        function renderEnquiriesList(items) {
+            const container = document.getElementById('enquiries-container');
+            let html = '';
+
+            items.forEach(item => {
+                const dateStr = item.created_at ? new Date(item.created_at).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' }) : 'Recently';
+                const cleanPhone = (item.contact_number || '').replace(/[^0-9]/g, '');
+                
+                // Formulate personalized WhatsApp message
+                const waText = encodeURIComponent(
+                    `Hello ${item.name || 'Brand'}! You messaged me on CityFame app regarding influencer collaboration. Can I know what kind of service or campaign requirement you need?`
+                );
+                const waUrl = `https://wa.me/91${cleanPhone}?text=${waText}`;
+                const callUrl = `tel:${cleanPhone}`;
+
+                html += `
+                    <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 18px; box-shadow: var(--shadow-sm);">
+                        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px;">
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <div style="width: 38px; height: 38px; border-radius: 50%; background: linear-gradient(135deg, #2563eb, #3b82f6); color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 0.95rem;">
+                                    ${(item.name || 'B').charAt(0).toUpperCase()}
+                                </div>
+                                <div>
+                                    <div style="font-weight: 800; font-size: 0.98rem; color: var(--text-primary);">${item.name || 'Brand Client'}</div>
+                                    <div style="font-size: 0.78rem; color: var(--text-muted); font-weight: 600;">📞 ${item.contact_number || 'N/A'}</div>
+                                </div>
+                            </div>
+                            <span style="font-size: 0.72rem; color: var(--text-muted); font-weight: 600;">${dateStr}</span>
+                        </div>
+
+                        ${item.message ? `<div style="font-size: 0.88rem; color: var(--text-secondary); background: var(--bg-secondary); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); padding: 12px; margin-bottom: 12px; line-height: 1.4;">${item.message}</div>` : ''}
+
+                        <!-- Call & WhatsApp Action Buttons -->
+                        <div class="action-btn-group">
+                            <a href="${callUrl}" class="btn-call">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                                Call Client
+                            </a>
+                            <a href="${waUrl}" target="_blank" class="btn-whatsapp">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+                                WhatsApp Chat
+                            </a>
+                        </div>
+                    </div>
+                `;
+            });
+
+            container.innerHTML = html;
+        }
+
+        function renderMockEnquiries() {
+            renderEnquiriesList([
+                {
+                    name: 'Royal Bakery Solapur',
+                    contact_number: '9876543210',
+                    message: 'Hello, we are opening a new branch near Park Chowk Solapur and want a reel promotion. Please share your charges.',
+                    created_at: new Date(Date.now() - 3600000 * 2).toISOString()
+                },
+                {
+                    name: 'Trendz Fashion Boutique',
+                    contact_number: '9123456789',
+                    message: 'Looking for female fashion creators for festive outfit store visit reel.',
+                    created_at: new Date(Date.now() - 3600000 * 24).toISOString()
+                }
+            ]);
+        }
+    </script>
+</body>
+</html>
