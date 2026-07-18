@@ -129,6 +129,16 @@ function processInstagramEmbeds() {
     }
 }
 
+// Helper to play Instagram Reel inline inside browser without redirecting
+function playInlineReel(containerId, reelId) {
+    const container = document.getElementById(containerId);
+    if (!container) return;
+
+    container.innerHTML = `
+        <iframe src="https://www.instagram.com/reel/${reelId}/embed/" style="width: 100%; height: 100%; border: none;" allowfullscreen scrolling="no" frameborder="0" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture"></iframe>
+    `;
+}
+
 // Extract & Render Embedded Video / Reel Preview Frame
 function renderMediaEmbed(url, workId = null, onDelete = null) {
     if (!url) return '';
@@ -163,16 +173,26 @@ function renderMediaEmbed(url, workId = null, onDelete = null) {
     const igMatch = cleanUrl.match(/(?:reel|reels|p|share\/reel)\/([A-Za-z0-9_-]+)/i);
     if (igMatch && igMatch[1]) {
         const reelId = igMatch[1];
+        const uniqueId = 'reel-box-' + Math.random().toString(36).substring(2, 9);
 
         return `
             <div class="work-item" style="border-radius: var(--radius-md); overflow: hidden; background: #ffffff; border: 1px solid var(--border-color); margin-top: 10px; text-align: center;">
-                <div style="width: 100%; max-width: 440px; height: 480px; margin: 0 auto; overflow: hidden; position: relative; background: #000; border-radius: 12px 12px 0 0;">
-                    <iframe src="https://www.instagram.com/reel/${reelId}/embed/" style="width: 100%; height: 100%; border: none;" allowfullscreen scrolling="no" frameborder="0"></iframe>
+                <div id="${uniqueId}" style="width: 100%; max-width: 440px; height: 440px; margin: 0 auto; overflow: hidden; position: relative; background: #0f172a; border-radius: 12px 12px 0 0; display: flex; flex-direction: column; align-items: center; justify-content: center; color: #fff; text-align: center; padding: 20px;">
+                    <div style="width: 64px; height: 64px; border-radius: 50%; background: linear-gradient(135deg, #dc2743, #cc2366, #bc1888); display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 4px 15px rgba(220,39,67,0.4); margin-bottom: 12px; transition: transform 0.2s;" onclick="playInlineReel('${uniqueId}', '${reelId}')">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="white" style="margin-left: 3px;"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                    </div>
+                    <div style="font-weight: 800; font-size: 1rem; margin-bottom: 4px;">Instagram Reel</div>
+                    <div style="font-size: 0.78rem; color: #94a3b8; margin-bottom: 16px;">Tap Play Reel below to watch inline in browser</div>
+                    <button onclick="playInlineReel('${uniqueId}', '${reelId}')" class="btn-primary btn-sm" style="width: auto; padding: 8px 18px; font-weight: 700; background: linear-gradient(135deg, #2563eb, #1d4ed8); border: none;">▶ Load & Play Video</button>
                 </div>
-                <div style="padding: 10px 14px; background: var(--bg-secondary); border-top: 1px solid var(--border-color); display: flex; align-items: center; justify-content: space-between; gap: 8px;">
+                <div style="padding: 10px 14px; background: var(--bg-secondary); border-top: 1px solid var(--border-color); display: flex; align-items: center; justify-content: space-between; gap: 10px;">
+                    <button onclick="playInlineReel('${uniqueId}', '${reelId}')" class="btn-primary btn-sm" style="flex: 1; font-weight: 700; display: inline-flex; align-items: center; justify-content: center; gap: 6px; background: var(--accent-black); color: #fff;">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                        Play Reel
+                    </button>
                     <a href="https://www.instagram.com/reel/${reelId}/" target="_blank" class="btn-secondary btn-sm" style="flex: 1; font-weight: 700; display: inline-flex; align-items: center; justify-content: center; gap: 6px; text-decoration: none;">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
-                        Open in Instagram App
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+                        Check on Instagram
                     </a>
                 </div>
                 ${deleteBtnHtml}
