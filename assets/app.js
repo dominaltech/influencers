@@ -163,27 +163,17 @@ function renderMediaEmbed(url, workId = null, onDelete = null) {
     const igMatch = cleanUrl.match(/(?:reel|reels|p|share\/reel)\/([A-Za-z0-9_-]+)/i);
     if (igMatch && igMatch[1]) {
         const reelId = igMatch[1];
-        // Schedule embed hydration after HTML is injected into DOM
-        setTimeout(processInstagramEmbeds, 200);
 
         return `
             <div class="work-item" style="border-radius: var(--radius-md); overflow: hidden; background: #ffffff; border: 1px solid var(--border-color); margin-top: 10px; text-align: center;">
-                <div style="width: 100%; max-width: 440px; height: 480px; margin: 0 auto; overflow: hidden; position: relative; background: #000; border-radius: 12px; display: flex; align-items: center; justify-content: center;">
-                    <blockquote
-                        class="instagram-media"
-                        data-instgrm-captioned
-                        data-instgrm-permalink="https://www.instagram.com/reel/${reelId}/"
-                        data-instgrm-version="14"
-                        style="background:#FFF; border:0; border-radius:12px; box-shadow:none; margin:0 auto; max-width:100%; width:100%; height:100%;"
-                    >
-                        <div style="padding:16px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:8px; height:100%;">
-                            <div style="width:48px; height:48px; border-radius:50%; background:linear-gradient(45deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888); display:flex; align-items:center; justify-content:center;">
-                                <svg width="24" height="24" viewBox="0 0 24 24" fill="white"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" fill="none" stroke="white" stroke-width="1.5"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5" stroke="white" stroke-width="2"/></svg>
-                            </div>
-                            <span style="font-size:0.85rem; font-weight:700; color:#fff;">Loading Reel Preview...</span>
-                            <a href="https://www.instagram.com/reel/${reelId}/" target="_blank" class="btn-secondary btn-sm" style="font-size:0.8rem; color:#fff; font-weight:600; text-decoration:none; background:rgba(255,255,255,0.2); border-color:rgba(255,255,255,0.4); margin-top:8px;">▶ Open in Instagram App</a>
-                        </div>
-                    </blockquote>
+                <div style="width: 100%; max-width: 440px; height: 480px; margin: 0 auto; overflow: hidden; position: relative; background: #000; border-radius: 12px 12px 0 0;">
+                    <iframe src="https://www.instagram.com/reel/${reelId}/embed/" style="width: 100%; height: 100%; border: none;" allowfullscreen scrolling="no" frameborder="0"></iframe>
+                </div>
+                <div style="padding: 10px 14px; background: var(--bg-secondary); border-top: 1px solid var(--border-color); display: flex; align-items: center; justify-content: space-between; gap: 8px;">
+                    <a href="https://www.instagram.com/reel/${reelId}/" target="_blank" class="btn-secondary btn-sm" style="flex: 1; font-weight: 700; display: inline-flex; align-items: center; justify-content: center; gap: 6px; text-decoration: none;">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+                        Open in Instagram App
+                    </a>
                 </div>
                 ${deleteBtnHtml}
             </div>
