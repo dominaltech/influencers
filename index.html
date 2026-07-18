@@ -378,21 +378,17 @@
                                 <img src="${dp}" alt="${inf.full_name}" class="influencer-dp" onerror="this.src='https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=300&q=80'">
                             </div>
                             <div class="influencer-info">
-                                <div class="influencer-name" style="font-size:0.9rem; font-weight:800; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${inf.full_name}</div>
-                                <div class="influencer-handle" style="font-size:0.75rem; color:var(--text-secondary);">
+                                <div class="influencer-name" style="font-size:0.86rem; font-weight:800; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; line-height:1.2;">${inf.full_name}</div>
+                                <div class="influencer-handle" style="font-size:0.72rem; color:var(--text-secondary); margin-top:2px;">
                                     @${handleClean}
                                 </div>
                             </div>
                         </div>
 
-                        <div class="stats-row" style="padding:8px 4px;">
+                        <div class="stats-row" style="padding:6px 2px; margin-top:4px;">
                             <div class="stat-item">
                                 <span class="stat-value" style="font-size:0.95rem;">${formatCount(inf.followers_count)}</span>
                                 <span class="stat-label" style="font-size:0.65rem;">Followers</span>
-                            </div>
-                            <div class="stat-item">
-                                <span class="stat-value" style="font-size:0.95rem;">${formatCount(inf.avg_views)}</span>
-                                <span class="stat-label" style="font-size:0.65rem;">Avg Views</span>
                             </div>
                             <div class="stat-item">
                                 <span class="stat-value" style="font-size:0.95rem;">${formatCount(inf.total_views || 0)}</span>
@@ -401,7 +397,7 @@
                         </div>
 
                         <div class="card-actions" style="margin-top:auto;">
-                            <button class="view-profile-btn" style="padding:7px 10px; font-size:0.78rem;">
+                            <button class="view-profile-btn" style="padding:6px 8px; font-size:0.75rem;">
                                 View Profile & Reels
                             </button>
                         </div>

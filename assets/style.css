@@ -269,20 +269,20 @@ html, body {
 .influencer-card-header {
     display: flex;
     align-items: center;
-    gap: 14px;
+    gap: 10px;
 }
 
 .influencer-dp-wrapper {
     position: relative;
-    padding: 3px;
+    padding: 2px;
     background: var(--accent-gradient);
     border-radius: var(--radius-full);
     flex-shrink: 0;
 }
 
 .influencer-dp {
-    width: 68px;
-    height: 68px;
+    width: 46px;
+    height: 46px;
     border-radius: var(--radius-full);
     object-fit: cover;
     background-color: var(--bg-elevated);
