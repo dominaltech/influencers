@@ -422,7 +422,8 @@
                     const { data: works } = await window.cityfameSupabase
                         .from('works')
                         .select('*')
-                        .eq('influencer_id', influencer.id);
+                        .eq('influencer_id', influencer.id)
+                        .order('created_at', { ascending: false });
 
                     if (works && works.length > 0) {
                         const worksList = document.getElementById('modal-works-list');
@@ -431,6 +432,8 @@
                             wHtml += renderMediaEmbed(w.url);
                         });
                         worksList.innerHTML = wHtml;
+                        // Hydrate Instagram embeds after HTML is in DOM
+                        processInstagramEmbeds();
                     }
                 } catch (e) {
                     console.log("Could not load works", e);

@@ -95,6 +95,26 @@ function updateActiveTab() {
 // Initialize active tab state on DOM load
 document.addEventListener('DOMContentLoaded', updateActiveTab);
 
+// 6. Instagram Embed Hydration Helper
+// Polls for window.instgrm to be ready (async script), then calls process()
+function processInstagramEmbeds() {
+    if (window.instgrm && window.instgrm.Embeds && typeof window.instgrm.Embeds.process === 'function') {
+        try { window.instgrm.Embeds.process(); } catch(e) { console.warn('CityFame: instgrm.process error', e); }
+    } else {
+        // Retry until embed.js is fully loaded (up to 10 seconds)
+        let attempts = 0;
+        const poll = setInterval(() => {
+            attempts++;
+            if (window.instgrm && window.instgrm.Embeds) {
+                clearInterval(poll);
+                try { window.instgrm.Embeds.process(); } catch(e) {}
+            } else if (attempts > 100) {
+                clearInterval(poll); // Give up after 10s
+            }
+        }, 100);
+    }
+}
+
 // Extract & Render Embedded Video / Reel Preview Frame
 function renderMediaEmbed(url, workId = null, onDelete = null) {
     if (!url) return '';
@@ -129,33 +149,26 @@ function renderMediaEmbed(url, workId = null, onDelete = null) {
     const igMatch = cleanUrl.match(/(?:reel|reels|p|share\/reel)\/([A-Za-z0-9_-]+)/i);
     if (igMatch && igMatch[1]) {
         const reelId = igMatch[1];
-
-        // Trigger Instagram Embeds Hydration if script loaded
-        setTimeout(() => {
-            if (window.instgrm && window.instgrm.Embeds && typeof window.instgrm.Embeds.process === 'function') {
-                try {
-                    window.instgrm.Embeds.process();
-                } catch (e) {
-                    console.warn("CityFame: Instgrm process error", e);
-                }
-            }
-        }, 100);
+        // Schedule embed hydration after HTML is injected into DOM
+        setTimeout(processInstagramEmbeds, 200);
 
         return `
             <div class="work-item" style="border-radius: var(--radius-md); overflow: hidden; background: #ffffff; border: 1px solid var(--border-color); margin-top: 10px; text-align: center;">
-                <blockquote class="instagram-media" data-instgrm-permalink="https://www.instagram.com/reel/${reelId}/" data-instgrm-version="14" style="background:#FFF; border:0; border-radius:12px; box-shadow:none; margin: 0 auto; width:100%;">
-                    <div style="padding:16px;">
-                        <a href="https://www.instagram.com/reel/${reelId}/" target="_blank" style="background:#FFFFFF; line-height:0; padding:0 0; text-align:center; text-decoration:none; width:100%; font-weight:700; color:#000;">
-                            ▶ View Instagram Reel (@${reelId})
-                        </a>
+                <blockquote
+                    class="instagram-media"
+                    data-instgrm-captioned
+                    data-instgrm-permalink="https://www.instagram.com/reel/${reelId}/"
+                    data-instgrm-version="14"
+                    style="background:#FFF; border:0; border-radius:12px; box-shadow:none; margin:0 auto; max-width:100%; width:calc(100% - 2px);"
+                >
+                    <div style="padding:16px; display:flex; flex-direction:column; align-items:center; gap:8px;">
+                        <div style="width:48px; height:48px; border-radius:50%; background:linear-gradient(45deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888); display:flex; align-items:center; justify-content:center;">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="white"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" fill="none" stroke="white" stroke-width="1.5"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5" stroke="white" stroke-width="2"/></svg>
+                        </div>
+                        <span style="font-size:0.85rem; font-weight:700; color:#262626;">Loading Instagram Reel...</span>
+                        <a href="https://www.instagram.com/reel/${reelId}/" target="_blank" style="font-size:0.8rem; color:#0095f6; font-weight:600; text-decoration:none;">▶ Open in Instagram App</a>
                     </div>
                 </blockquote>
-                <div style="padding: 10px 14px; background: var(--bg-secondary); border-top: 1px solid var(--border-subtle); display: flex; align-items: center; justify-content: space-between;">
-                    <a href="https://www.instagram.com/reel/${reelId}/" target="_blank" style="font-size: 0.8rem; font-weight: 700; color: var(--accent-black); text-decoration: none; display: inline-flex; align-items: center; gap: 4px;">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
-                        Watch on Instagram App
-                    </a>
-                </div>
                 ${deleteBtnHtml}
             </div>
         `;

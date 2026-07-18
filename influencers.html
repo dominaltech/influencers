@@ -355,9 +355,12 @@
             if (savedCreator) {
                 try {
                     currentProfile = JSON.parse(savedCreator);
+                    // Refresh profile from Supabase to get latest data
                     await refreshCurrentProfile();
                     renderDashboard();
                     switchState('dashboard');
+                    // Always fetch works & enquiries fresh from DB on load
+                    await fetchWorksAndEnquiries();
                     return;
                 } catch (e) {
                     localStorage.removeItem('cityfame_creator');
@@ -457,6 +460,8 @@
                     showToast("Profile submitted! Your profile is currently under review.");
                     renderDashboard();
                     switchState('dashboard');
+                    // Immediately load any existing data
+                    await fetchWorksAndEnquiries();
 
                 } catch (err) {
                     showToast(err.message || "Registration failed.", false);
@@ -512,6 +517,8 @@
                     renderDashboard();
                     switchState('dashboard');
                     showToast("Welcome back, " + currentProfile.full_name + "!");
+                    // Load works and enquiries immediately after login
+                    await fetchWorksAndEnquiries();
                 } catch (err) {
                     showToast(err.message || "Login failed.", false);
                 }
@@ -711,6 +718,8 @@
                     html += renderMediaEmbed(w.url, w.id, 'deleteWork');
                 });
                 worksContainer.innerHTML = html;
+                // Hydrate all Instagram embeds after injecting HTML
+                processInstagramEmbeds();
             } else {
                 worksContainer.innerHTML = `<p style="font-size: 0.82rem; color: var(--text-muted);">No featured works added yet.</p>`;
             }
