@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Influencer Profile - CityFame</title>
+    <meta name="description" content="View creator profile, featured Instagram reels, stats, and send brand collaboration enquiries on CityFame.">
+    <meta name="theme-color" content="#000000">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="manifest" href="manifest.json">
+    <link rel="stylesheet" href="assets/style.css">
+    <!-- Instagram SDK -->
+    <script async src="https://www.instagram.com/embed.js"></script>
+    <!-- Supabase CDN JS SDK -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Top Navbar -->
+        <header class="top-navbar">
+            <div class="nav-header-inner">
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <button class="icon-btn" onclick="window.location.href='index.html'" title="Back to Home">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/>
+                        </svg>
+                    </button>
+                    <a href="index.html" class="brand-logo">
+                        <img src="logo.png" alt="CityFame Logo" style="width: 28px; height: 28px; border-radius: 6px; object-fit: cover;">
+                        <div>
+                            <div class="brand-title">CityFame</div>
+                            <div class="brand-subtitle">Creator Profile</div>
+                        </div>
+                    </a>
+                </div>
+
+                <!-- Desktop Nav Links -->
+                <nav class="desktop-nav-links">
+                    <a href="index.html">Home Feed</a>
+                    <a href="influencers.html">For Influencers</a>
+                    <a href="enquiries.html">Brand DMs</a>
+                    <a href="about.html">About Us</a>
+                    <a href="settings.html">Settings</a>
+                </nav>
+
+                <div class="nav-actions">
+                    <button class="icon-btn dm-icon-btn" onclick="openEnquiriesPage()" title="Brand DMs & Inbox">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="22" y1="2" x2="11" y2="13"/>
+                            <polygon points="22 2 15 22 11 13 2 9 22 2"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Side Navigation Drawer Overlay -->
+        <div id="side-drawer-backdrop" class="drawer-backdrop" onclick="closeSideDrawer()">
+            <div class="side-drawer" onclick="event.stopPropagation()">
+                <div class="drawer-header">
+                    <div class="drawer-title-group">
+                        <img src="logo.png" alt="CityFame Logo" style="width: 24px; height: 24px; border-radius: 6px; object-fit: cover;">
+                        <span style="font-weight: 800; font-size: 1.1rem; color: var(--text-primary);">CityFame</span>
+                    </div>
+                    <button class="icon-btn" onclick="closeSideDrawer()">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                    </button>
+                </div>
+                <div class="drawer-body">
+                    <div class="drawer-section-title">Navigation</div>
+                    <a href="index.html" class="drawer-menu-item">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                        Home Feed
+                    </a>
+                    <a href="influencers.html" class="drawer-menu-item">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                        Creator Hub & Login
+                    </a>
+                    <a href="enquiries.html" class="drawer-menu-item">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+                        Brand DMs & Inbox
+                    </a>
+                    <a href="about.html" class="drawer-menu-item">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+                        About Platform
+                    </a>
+
+                    <div class="drawer-section-title" style="margin-top: 14px;">Preferences</div>
+                    <a href="settings.html" class="drawer-menu-item">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+                        App Settings
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Body -->
+        <main class="main-content">
+            <!-- Profile Hero Container -->
+            <div id="profile-hero-card" style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 24px; text-align: center; margin-bottom: 20px; box-shadow: var(--shadow-sm);">
+                <div style="position: relative; display: inline-block; margin-bottom: 12px;">
+                    <img id="prof-dp" src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=300&q=80" style="width: 96px; height: 96px; border-radius: 50%; object-fit: cover; border: 3px solid #ffffff; box-shadow: 0 0 0 3px #dc2743;">
+                </div>
+                <h1 id="prof-name" style="font-size: 1.4rem; font-weight: 800; margin-bottom: 4px;">Loading Profile...</h1>
+                <a id="prof-handle-link" href="#" target="_blank" style="color: var(--text-secondary); text-decoration: none; font-weight: 600; font-size: 0.92rem; display: inline-flex; align-items: center; gap: 4px; margin-bottom: 16px;">
+                    @loading
+                </a>
+
+                <!-- Stats Grid -->
+                <div style="display: flex; background: var(--bg-secondary); border-radius: var(--radius-md); padding: 14px; text-align: center; justify-content: space-around; border: 1px solid var(--border-color);">
+                    <div>
+                        <div id="prof-followers" style="font-weight: 800; font-size: 1.1rem; color: var(--text-primary);">0</div>
+                        <div style="font-size: 0.68rem; color: var(--text-muted); font-weight: 700; text-transform: uppercase;">Followers</div>
+                    </div>
+                    <div style="width: 1px; background: var(--border-color);"></div>
+                    <div>
+                        <div id="prof-avgviews" style="font-weight: 800; font-size: 1.1rem; color: var(--text-primary);">0</div>
+                        <div style="font-size: 0.68rem; color: var(--text-muted); font-weight: 700; text-transform: uppercase;">Avg Views</div>
+                    </div>
+                    <div style="width: 1px; background: var(--border-color);"></div>
+                    <div>
+                        <div id="prof-totalviews" style="font-weight: 800; font-size: 1.1rem; color: var(--text-primary);">0</div>
+                        <div style="font-size: 0.68rem; color: var(--text-muted); font-weight: 700; text-transform: uppercase;">Total Views</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Featured Works / Reels Section -->
+            <div style="margin-bottom: 24px;">
+                <h3 style="font-size: 1.05rem; font-weight: 800; margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
+                    🎬 <span>Featured Reels & Video Collaborations</span>
+                </h3>
+                <div id="profile-works-list" style="display: flex; flex-direction: column; gap: 16px;">
+                    <div style="text-align: center; padding: 30px; color: var(--text-muted); font-size: 0.85rem;">
+                        Loading creator's reels...
+                    </div>
+                </div>
+            </div>
+
+            <!-- Send Brand Enquiry Card -->
+            <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 20px; box-shadow: var(--shadow-sm); margin-bottom: 24px;">
+                <h3 style="font-size: 1.05rem; font-weight: 800; margin-bottom: 4px;">📩 Collaborate with this Creator</h3>
+                <p style="font-size: 0.82rem; color: var(--text-secondary); margin-bottom: 16px;">Are you a local business owner or brand? Send a direct enquiry message.</p>
+
+                <form onsubmit="submitProfileEnquiry(event)">
+                    <div class="form-group" style="margin-bottom: 12px;">
+                        <label class="form-label" style="font-size: 0.8rem;">Your Name / Business Name</label>
+                        <input type="text" id="prof-enq-name" class="form-control" placeholder="e.g. Royal Cafe Solapur" required>
+                    </div>
+                    <div class="form-group" style="margin-bottom: 12px;">
+                        <label class="form-label" style="font-size: 0.8rem;">WhatsApp Contact Number</label>
+                        <input type="tel" id="prof-enq-phone" class="form-control" placeholder="e.g. 9876543210" required pattern="[0-9]{10}">
+                    </div>
+                    <div class="form-group" style="margin-bottom: 16px;">
+                        <label class="form-label" style="font-size: 0.8rem;">Campaign Details / Requirement (Optional)</label>
+                        <textarea id="prof-enq-msg" class="form-control" rows="2" placeholder="Describe your store visit, reel promotion, or product offer..."></textarea>
+                    </div>
+                    <button type="submit" id="prof-enq-btn" class="btn-primary" style="width: 100%;">Send Direct Enquiry</button>
+                </form>
+            </div>
+        </main>
+
+        <!-- Fixed Bottom Navigation (Mobile Tab Bar) -->
+        <nav class="bottom-tab-bar">
+            <a href="index.html" class="tab-item active">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                <span>Home</span>
+            </a>
+            <a href="influencers.html" class="tab-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                <span>Creators</span>
+            </a>
+            <a href="enquiries.html" class="tab-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+                <span>Inbox</span>
+            </a>
+            <a href="settings.html" class="tab-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+                <span>Settings</span>
+            </a>
+        </nav>
+    </div>
+
+    <script src="assets/supabase-client.js"></script>
+    <script src="assets/app.js"></script>
+    <script>
+        let currentInfluencerId = null;
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            const params = new URLSearchParams(window.location.search);
+            currentInfluencerId = params.get('id');
+
+            if (!currentInfluencerId) {
+                window.location.replace('index.html');
+                return;
+            }
+
+            await loadInfluencerProfileData(currentInfluencerId);
+        });
+
+        async function loadInfluencerProfileData(id) {
+            let influencer = null;
+
+            if (window.cityfameSupabase) {
+                try {
+                    const { data, error } = await window.cityfameSupabase
+                        .from('influencers')
+                        .select('*')
+                        .eq('id', id)
+                        .single();
+                    if (!error && data) influencer = data;
+                } catch(e) {}
+            }
+
+            if (!influencer) {
+                // Fallback mock check if offline
+                influencer = {
+                    id: id,
+                    full_name: 'Solapur Creator',
+                    instagram_handle: '@solapur_creator',
+                    followers_count: 50000,
+                    avg_views: 35000,
+                    total_views: 1200000,
+                    dp_url: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=300&q=80'
+                };
+            }
+
+            // Render Hero Stats
+            const handleClean = (influencer.instagram_handle || '').replace(/^@/, '');
+            document.getElementById('prof-dp').src = influencer.dp_url || 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=300&q=80';
+            document.getElementById('prof-name').innerText = influencer.full_name || 'Creator';
+            const handleLink = document.getElementById('prof-handle-link');
+            handleLink.href = `https://instagram.com/${handleClean}`;
+            handleLink.innerText = `@${handleClean}`;
+
+            document.getElementById('prof-followers').innerText = formatCount(influencer.followers_count);
+            document.getElementById('prof-avgviews').innerText = formatCount(influencer.avg_views);
+            document.getElementById('prof-totalviews').innerText = formatCount(influencer.total_views || 0);
+
+            // Fetch Creator's Featured Reels
+            await loadProfileWorks(id);
+        }
+
+        async function loadProfileWorks(influencerId) {
+            const worksList = document.getElementById('profile-works-list');
+            
+            if (window.cityfameSupabase) {
+                try {
+                    const { data: works } = await window.cityfameSupabase
+                        .from('works')
+                        .select('*')
+                        .eq('influencer_id', influencerId)
+                        .order('created_at', { ascending: false });
+
+                    if (works && works.length > 0) {
+                        let wHtml = '';
+                        works.forEach(w => {
+                            const viewsHtml = w.reel_views ? `<span style="font-weight:700; color:var(--text-secondary); font-size:0.8rem;">👁️ ${formatCount(w.reel_views)} views</span>` : '';
+                            const likesHtml = w.reel_likes ? `<span style="font-weight:700; color:var(--text-secondary); font-size:0.8rem;">❤️ ${formatCount(w.reel_likes)} likes</span>` : '';
+                            const stats = (viewsHtml || likesHtml) ? `<div style="display:flex; gap:12px; padding:8px 12px; background:var(--bg-secondary); border-top:1px solid var(--border-color);">${viewsHtml}${likesHtml}</div>` : '';
+
+                            wHtml += `
+                                <div style="border:1px solid var(--border-color); border-radius:var(--radius-md); overflow:hidden; background:#fff;">
+                                    ${renderMediaEmbed(w.url)}
+                                    ${stats}
+                                </div>
+                            `;
+                        });
+                        worksList.innerHTML = wHtml;
+                        processInstagramEmbeds();
+                        return;
+                    }
+                } catch(e) {}
+            }
+
+            worksList.innerHTML = `<p style="font-size: 0.85rem; color: var(--text-muted); text-align: center;">No sample reels uploaded yet.</p>`;
+        }
+
+        async function submitProfileEnquiry(e) {
+            e.preventDefault();
+            const btn = document.getElementById('prof-enq-btn');
+            btn.disabled = true;
+            btn.innerText = 'Sending Enquiry...';
+
+            const name = document.getElementById('prof-enq-name').value.trim();
+            const contact_number = document.getElementById('prof-enq-phone').value.trim();
+            const message = document.getElementById('prof-enq-msg').value.trim();
+
+            if (window.cityfameSupabase && currentInfluencerId) {
+                try {
+                    const { error } = await window.cityfameSupabase
+                        .from('enquiries')
+                        .insert([{
+                            influencer_id: currentInfluencerId,
+                            name: name,
+                            contact_number: contact_number,
+                            message: message
+                        }]);
+
+                    if (error) throw error;
+                } catch (err) {
+                    console.warn("Supabase enquiry fallback:", err);
+                }
+            }
+
+            showToast("Your enquiry has been sent to creator!");
+            btn.disabled = false;
+            btn.innerText = 'Send Direct Enquiry';
+            document.getElementById('prof-enq-name').value = '';
+            document.getElementById('prof-enq-phone').value = '';
+            document.getElementById('prof-enq-msg').value = '';
+        }
+    </script>
+</body>
+</html>

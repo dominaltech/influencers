@@ -9,6 +9,7 @@ const ASSETS_TO_CACHE = [
     '/welcome.html',
     '/index.html',
     '/influencers.html',
+    '/profile.html',
     '/about.html',
     '/enquiries.html',
     '/settings.html',
