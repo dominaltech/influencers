@@ -1,0 +1,817 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>For Influencers - Join CityFame Solapur</title>
+    <meta name="description" content="List your Instagram profile on CityFame to get discovered by local Solapur brands and business owners.">
+    <meta name="theme-color" content="#000000">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="manifest" href="manifest.json">
+    <link rel="stylesheet" href="assets/style.css">
+    <!-- Supabase CDN JS SDK -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Top Navbar -->
+        <header class="top-navbar">
+            <div class="nav-header-inner">
+                <a href="index.html" class="brand-logo">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <polygon points="12 2 2 7 12 12 22 7 12 2"/>
+                        <polyline points="2 17 12 22 22 17"/>
+                        <polyline points="2 12 12 17 22 12"/>
+                    </svg>
+                    <div>
+                        <div class="brand-title">CityFame</div>
+                        <div class="brand-subtitle">Creator Hub</div>
+                    </div>
+                </a>
+
+                <!-- Desktop Nav Links -->
+                <nav class="desktop-nav-links">
+                    <a href="index.html">Home Feed</a>
+                    <a href="influencers.html" class="active">For Influencers</a>
+                    <a href="about.html">About Us</a>
+                </nav>
+
+                <div id="auth-nav-action" class="nav-actions">
+                    <button class="city-badge" onclick="switchState('login')" id="nav-login-btn">Log In</button>
+                </div>
+            </div>
+        </header>
+
+        <main class="main-content">
+            <!-- STATE A: LANDING / MARKETING (Logged Out) -->
+            <section id="state-landing" class="view-state">
+                <div style="text-align: center; padding: 20px 0 30px;">
+                    <div style="display: inline-flex; align-items: center; gap: 6px; background: var(--bg-secondary); border: 1px solid var(--border-color); padding: 6px 14px; border-radius: var(--radius-full); font-size: 0.78rem; font-weight: 700; margin-bottom: 16px;">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                        100% Free Creator Directory
+                    </div>
+                    <h1 style="font-size: 1.6rem; line-height: 1.25; margin-bottom: 12px;">Get Discovered by Brands in Solapur</h1>
+                    <p style="font-size: 0.95rem; color: var(--text-secondary); max-width: 380px; margin: 0 auto 24px;">
+                        Increase your visibility to local business owners, cafes, and fashion brands looking to collaborate with creators.
+                    </p>
+                    
+                    <div style="display: flex; flex-direction: column; gap: 12px; max-width: 320px; margin: 0 auto 30px;">
+                        <button class="btn-primary" onclick="switchState('signup')">Create Creator Profile</button>
+                        <button class="btn-secondary" onclick="switchState('login')">Already Registered? Log In</button>
+                    </div>
+
+                    <!-- Benefits List -->
+                    <div style="display: flex; flex-direction: column; gap: 14px; text-align: left; background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 20px;">
+                        <div style="display: flex; gap: 12px; align-items: flex-start;">
+                            <div style="background: var(--bg-primary); width: 36px; height: 36px; border-radius: var(--radius-full); display: flex; align-items: center; justify-content: center; flex-shrink: 0; border: 1px solid var(--border-color);">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                            </div>
+                            <div>
+                                <div style="font-weight: 700; font-size: 0.92rem; color: var(--text-primary);">Get Listed to Local Brands</div>
+                                <div style="font-size: 0.82rem; color: var(--text-secondary);">Showcase your followers and average reel views directly to verified local businesses.</div>
+                            </div>
+                        </div>
+
+                        <div style="display: flex; gap: 12px; align-items: flex-start;">
+                            <div style="background: var(--bg-primary); width: 36px; height: 36px; border-radius: var(--radius-full); display: flex; align-items: center; justify-content: center; flex-shrink: 0; border: 1px solid var(--border-color);">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                            </div>
+                            <div>
+                                <div style="font-weight: 700; font-size: 0.92rem; color: var(--text-primary);">Free Forever</div>
+                                <div style="font-size: 0.82rem; color: var(--text-secondary);">Zero listing charges or agency cuts. 100% free community platform.</div>
+                            </div>
+                        </div>
+
+                        <div style="display: flex; gap: 12px; align-items: flex-start;">
+                            <div style="background: var(--bg-primary); width: 36px; height: 36px; border-radius: var(--radius-full); display: flex; align-items: center; justify-content: center; flex-shrink: 0; border: 1px solid var(--border-color);">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                            </div>
+                            <div>
+                                <div style="font-weight: 700; font-size: 0.92rem; color: var(--text-primary);">Direct Enquiries</div>
+                                <div style="font-size: 0.82rem; color: var(--text-secondary);">Receive brand collaboration offers directly in your creator dashboard.</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- STATE B: SIGN UP FORM -->
+            <section id="state-signup" class="view-state" style="display: none;">
+                <div style="margin-bottom: 20px;">
+                    <button class="btn-secondary btn-sm" onclick="switchState('landing')" style="width: auto; margin-bottom: 12px;">← Back</button>
+                    <h2>Creator Registration</h2>
+                    <p>Enter your Instagram stats to create your profile.</p>
+                </div>
+
+                <form id="signup-form" onsubmit="handleSignup(event)">
+                    <div class="form-group">
+                        <label class="form-label">Full Name</label>
+                        <input type="text" id="sup-fullname" class="form-control" placeholder="e.g. Ramesh Kulkarni" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Email Address (For Account Login)</label>
+                        <input type="email" id="sup-email" class="form-control" placeholder="yourname@gmail.com" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Password</label>
+                        <input type="password" id="sup-password" class="form-control" placeholder="Create a secure password" minlength="6" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Contact / WhatsApp Number</label>
+                        <input type="tel" id="sup-phone" class="form-control" placeholder="10 digit phone number" pattern="[0-9]{10}" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Instagram Handle</label>
+                        <input type="text" id="sup-handle" class="form-control" placeholder="@username" required oninput="formatHandleInput(this)">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Overall Followers Count</label>
+                        <input type="number" id="sup-followers" class="form-control" placeholder="e.g. 25000" min="0" required>
+                    </div>
+
+                    <div class="filter-row" style="margin-bottom: 12px;">
+                        <div class="form-group" style="margin: 0; flex: 1;">
+                            <label class="form-label">Average Views per Reel</label>
+                            <input type="number" id="sup-views" class="form-control" placeholder="e.g. 18000" min="0" required>
+                        </div>
+                        <div class="form-group" style="margin: 0; flex: 1;">
+                            <label class="form-label">Total Views (Across all posts)</label>
+                            <input type="number" id="sup-totalviews" class="form-control" placeholder="e.g. 500000" min="0" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Profile Photo (DP)</label>
+                        <input type="file" id="sup-dp" class="form-control" accept="image/*" required>
+                    </div>
+
+                    <label class="form-checkbox">
+                        <input type="checkbox" id="sup-confirm" required>
+                        <span>I confirm this information is accurate.</span>
+                    </label>
+
+                    <div class="warning-box">
+                        <strong>Warning:</strong> Please enter correct information. If false stats or fake profiles are detected, our system will automatically ban your account permanently.
+                    </div>
+
+                    <button type="submit" class="btn-primary" id="signup-submit-btn">Submit Profile for Review</button>
+                </form>
+            </section>
+
+            <!-- STATE C: LOGIN FORM -->
+            <section id="state-login" class="view-state" style="display: none;">
+                <div style="margin-bottom: 20px;">
+                    <button class="btn-secondary btn-sm" onclick="switchState('landing')" style="width: auto; margin-bottom: 12px;">← Back</button>
+                    <h2>Creator Log In</h2>
+                    <p>Manage your portfolio and view brand enquiries.</p>
+                </div>
+
+                <form id="login-form" onsubmit="handleLogin(event)">
+                    <div class="form-group">
+                        <label class="form-label">Email Address</label>
+                        <input type="email" id="log-email" class="form-control" placeholder="yourname@gmail.com" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Password</label>
+                        <input type="password" id="log-password" class="form-control" placeholder="Enter password" required>
+                    </div>
+
+                    <div style="text-align: right; margin-bottom: 16px;">
+                        <a href="#" onclick="handleForgotPassword(event)" style="font-size: 0.8rem; color: var(--text-secondary); text-decoration: none;">Forgot password?</a>
+                    </div>
+
+                    <button type="submit" class="btn-primary" id="login-submit-btn">Log In</button>
+                </form>
+            </section>
+
+            <!-- STATE D: INFLUENCER DASHBOARD (Logged In) -->
+            <section id="state-dashboard" class="view-state" style="display: none;">
+                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px;">
+                    <div>
+                        <h2>Creator Dashboard</h2>
+                        <p style="font-size: 0.82rem;">Welcome back to CityFame Solapur</p>
+                    </div>
+                    <div style="display: flex; gap: 8px;">
+                        <button class="modal-close-btn" title="Refresh Dashboard" onclick="refreshDashboard(this)">
+                            <svg id="refresh-spin-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 4v6h-6"/><path d="M1 20v-6h6"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
+                        </button>
+                        <button class="modal-close-btn" title="Log Out" onclick="handleLogout()">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Profile Summary Card -->
+                <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 18px; margin-bottom: 20px; box-shadow: var(--shadow-sm);">
+                    <div style="display: flex; align-items: center; gap: 14px; margin-bottom: 14px;">
+                        <img id="dash-dp" src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=300&q=80" style="width: 64px; height: 64px; border-radius: 50%; object-fit: cover; border: 2px solid var(--border-subtle);">
+                        <div style="flex: 1;">
+                            <div id="dash-name" style="font-weight: 800; font-size: 1.1rem; color: var(--text-primary);">Creator Name</div>
+                            <div id="dash-handle" style="font-size: 0.85rem; color: var(--text-secondary);">@handle</div>
+                            <div style="margin-top: 4px;">
+                                <span id="dash-status-badge" class="badge badge-pending">Pending Review</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style="display: flex; background: var(--bg-secondary); border-radius: var(--radius-sm); padding: 10px; text-align: center; justify-content: space-around; border: 1px solid var(--border-subtle);">
+                        <div>
+                            <div id="dash-followers" style="font-weight: 800; font-size: 0.95rem;">0</div>
+                            <div style="font-size: 0.68rem; color: var(--text-muted); font-weight: 700;">FOLLOWERS</div>
+                        </div>
+                        <div style="width: 1px; background: var(--border-color);"></div>
+                        <div>
+                            <div id="dash-views" style="font-weight: 800; font-size: 0.95rem;">0</div>
+                            <div style="font-size: 0.68rem; color: var(--text-muted); font-weight: 700;">AVG VIEWS</div>
+                        </div>
+                        <div style="width: 1px; background: var(--border-color);"></div>
+                        <div>
+                            <div id="dash-totalviews" style="font-weight: 800; font-size: 0.95rem;">0</div>
+                            <div style="font-size: 0.68rem; color: var(--text-muted); font-weight: 700;">TOTAL VIEWS</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section: Edit & Manage Full Profile -->
+                <div style="background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 18px; margin-bottom: 20px;">
+                    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px;">
+                        <h3 style="font-size: 1rem; font-weight: 700;">Edit & Manage Profile</h3>
+                        <span style="font-size: 0.75rem; color: var(--text-muted); font-weight: 600;">Keep info up-to-date</span>
+                    </div>
+
+                    <form onsubmit="handleFullProfileUpdate(event)">
+                        <div class="form-group">
+                            <label class="form-label">Full Name</label>
+                            <input type="text" id="edit-fullname" class="form-control" required>
+                        </div>
+
+                        <div class="filter-row" style="margin-bottom: 12px;">
+                            <div class="form-group" style="margin: 0; flex: 1;">
+                                <label class="form-label">Instagram Handle</label>
+                                <input type="text" id="edit-handle" class="form-control" required oninput="formatHandleInput(this)">
+                            </div>
+                            <div class="form-group" style="margin: 0; flex: 1;">
+                                <label class="form-label">WhatsApp Number</label>
+                                <input type="tel" id="edit-phone" class="form-control" required pattern="[0-9]{10}">
+                            </div>
+                        </div>
+
+                        <div class="filter-row" style="margin-bottom: 12px;">
+                            <div class="form-group" style="margin: 0; flex: 1;">
+                                <label class="form-label">Followers Count</label>
+                                <input type="number" id="edit-followers" class="form-control" required min="0">
+                            </div>
+                            <div class="form-group" style="margin: 0; flex: 1;">
+                                <label class="form-label">Avg Views</label>
+                                <input type="number" id="edit-views" class="form-control" required min="0">
+                            </div>
+                            <div class="form-group" style="margin: 0; flex: 1;">
+                                <label class="form-label">Total Views</label>
+                                <input type="number" id="edit-totalviews" class="form-control" required min="0">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Update Profile Photo (Optional)</label>
+                            <input type="file" id="edit-dp" class="form-control" accept="image/*">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">New Password (Leave blank to keep current)</label>
+                            <input type="password" id="edit-password" class="form-control" placeholder="••••••••">
+                        </div>
+
+                        <button type="submit" class="btn-primary btn-sm" id="edit-save-btn" style="width: 100%; margin-top: 6px;">Save Profile Changes</button>
+                    </form>
+                </div>
+
+                <!-- Section: My Works -->
+                <div style="background: var(--bg-primary); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 18px; margin-bottom: 20px;">
+                    <h3 style="font-size: 1rem; font-weight: 700; margin-bottom: 12px;">My Featured Works & Reels</h3>
+                    <form onsubmit="handleAddWork(event)" style="margin-bottom: 14px;">
+                        <div class="form-group">
+                            <label class="form-label">Paste Instagram Reel or YouTube URL</label>
+                            <input type="url" id="work-url" class="form-control" placeholder="https://www.instagram.com/reel/..." required oninput="previewWorkUrl(this.value)">
+                        </div>
+
+                        <!-- Live Instant Preview Box -->
+                        <div id="live-url-preview-box" style="margin-bottom: 14px; display: none;">
+                            <div style="font-size: 0.72rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; margin-bottom: 4px;">Live Embed Preview</div>
+                            <div id="live-url-preview-content"></div>
+                        </div>
+
+                        <button type="submit" class="btn-primary btn-sm" id="add-work-btn">Add Reel / Video</button>
+                    </form>
+                    
+                    <div id="dash-works-list" class="works-grid">
+                        <p style="font-size: 0.82rem; color: var(--text-muted);">No featured works added yet.</p>
+                    </div>
+                </div>
+
+                <!-- Section: Enquiries Received -->
+                <div style="background: var(--bg-primary); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 16px;">
+                    <h3 style="font-size: 0.98rem; margin-bottom: 12px;">Brand Enquiries Received</h3>
+                    <div id="dash-enquiries-list" style="display: flex; flex-direction: column; gap: 10px;">
+                        <p style="font-size: 0.82rem; color: var(--text-muted);">No brand enquiries received yet.</p>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Bottom Tab Bar -->
+        <nav class="bottom-tab-bar">
+            <a href="index.html" class="tab-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                <span>Home</span>
+            </a>
+            <a href="influencers.html" class="tab-item active">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/></svg>
+                <span>For Influencers</span>
+            </a>
+            <a href="about.html" class="tab-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+                <span>About Us</span>
+            </a>
+        </nav>
+    </div>
+
+    <script src="assets/supabase-client.js"></script>
+    <script src="assets/app.js"></script>
+    <script>
+        let currentProfile = null;
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            // Check logged in session from localStorage
+            const savedCreator = localStorage.getItem('cityfame_creator');
+            if (savedCreator) {
+                try {
+                    currentProfile = JSON.parse(savedCreator);
+                    await refreshCurrentProfile();
+                    renderDashboard();
+                    switchState('dashboard');
+                    return;
+                } catch (e) {
+                    localStorage.removeItem('cityfame_creator');
+                }
+            }
+            switchState('landing');
+        });
+
+        function switchState(stateName) {
+            document.querySelectorAll('.view-state').forEach(sec => sec.style.display = 'none');
+            const target = document.getElementById(`state-${stateName}`);
+            if (target) target.style.display = 'block';
+
+            const navBtn = document.getElementById('nav-login-btn');
+            if (stateName === 'dashboard') {
+                if (navBtn) navBtn.innerText = 'Dashboard';
+            } else {
+                if (navBtn) navBtn.innerText = 'Log In';
+            }
+        }
+
+        function formatHandleInput(input) {
+            let val = input.value.trim();
+            if (val && !val.startsWith('@')) {
+                input.value = '@' + val;
+            }
+        }
+
+        async function handleSignup(e) {
+            e.preventDefault();
+            const btn = document.getElementById('signup-submit-btn');
+            btn.disabled = true;
+            btn.innerText = 'Submitting Profile...';
+
+            const fullName = document.getElementById('sup-fullname').value.trim();
+            const email = document.getElementById('sup-email').value.trim();
+            const password = document.getElementById('sup-password').value;
+            const phone = document.getElementById('sup-phone').value.trim();
+            const handle = document.getElementById('sup-handle').value.trim();
+            const followers = parseInt(document.getElementById('sup-followers').value);
+            const views = parseInt(document.getElementById('sup-views').value);
+            const totalViews = parseInt(document.getElementById('sup-totalviews').value) || 0;
+            const dpFile = document.getElementById('sup-dp').files[0];
+
+            let dpUrl = 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=300&q=80';
+
+            if (window.cityfameSupabase) {
+                try {
+                    // 1. Upload DP if provided
+                    if (dpFile) {
+                        const fileExt = dpFile.name.split('.').pop();
+                        const fileName = `${Date.now()}_${Math.random().toString(36).substring(7)}.${fileExt}`;
+                        const { error: uploadErr } = await window.cityfameSupabase.storage
+                            .from('dp')
+                            .upload(fileName, dpFile, { upsert: true });
+
+                        if (!uploadErr) {
+                            const { data: pubUrlData } = window.cityfameSupabase.storage.from('dp').getPublicUrl(fileName);
+                            if (pubUrlData && pubUrlData.publicUrl) {
+                                dpUrl = pubUrlData.publicUrl;
+                            }
+                        } else {
+                            console.warn("DP Upload Error:", uploadErr);
+                        }
+                    }
+
+                    // 2. Insert row directly into influencers table
+                    const { data: insertedData, error: dbErr } = await window.cityfameSupabase
+                        .from('influencers')
+                        .insert([{
+                            full_name: fullName,
+                            email: email,
+                            password: password,
+                            contact_number: phone,
+                            instagram_handle: handle,
+                            city: 'Solapur',
+                            state: 'Maharashtra',
+                            followers_count: followers,
+                            avg_views: views,
+                            total_views: totalViews,
+                            dp_url: dpUrl,
+                            status: 'pending'
+                        }])
+                        .select()
+                        .single();
+
+                    if (dbErr) {
+                        if (dbErr.message && dbErr.message.includes('unique constraint')) {
+                            throw new Error("This email or Instagram handle is already registered.");
+                        }
+                        throw dbErr;
+                    }
+
+                    currentProfile = insertedData;
+                    localStorage.setItem('cityfame_creator', JSON.stringify(currentProfile));
+
+                    showToast("Profile submitted! Your profile is currently under review.");
+                    renderDashboard();
+                    switchState('dashboard');
+
+                } catch (err) {
+                    showToast(err.message || "Registration failed.", false);
+                }
+            } else {
+                // Fallback local mock mode
+                currentProfile = {
+                    id: "demo-" + Date.now(),
+                    full_name: fullName,
+                    email: email,
+                    instagram_handle: handle,
+                    followers_count: followers,
+                    avg_views: views,
+                    status: 'pending',
+                    dp_url: dpUrl
+                };
+                localStorage.setItem('cityfame_creator', JSON.stringify(currentProfile));
+                showToast("Demo profile submitted! Under review.");
+                renderDashboard();
+                switchState('dashboard');
+            }
+
+            btn.disabled = false;
+            btn.innerText = 'Submit Profile for Review';
+        }
+
+        async function handleLogin(e) {
+            e.preventDefault();
+            const btn = document.getElementById('login-submit-btn');
+            btn.disabled = true;
+            btn.innerText = 'Logging In...';
+
+            const email = document.getElementById('log-email').value.trim();
+            const password = document.getElementById('log-password').value;
+
+            if (window.cityfameSupabase) {
+                try {
+                    const { data, error } = await window.cityfameSupabase
+                        .from('influencers')
+                        .select('*')
+                        .eq('email', email)
+                        .eq('password', password)
+                        .maybeSingle();
+
+                    if (error) throw error;
+                    if (!data) {
+                        throw new Error("Invalid email or password. Please try again.");
+                    }
+
+                    currentProfile = data;
+                    localStorage.setItem('cityfame_creator', JSON.stringify(currentProfile));
+
+                    renderDashboard();
+                    switchState('dashboard');
+                    showToast("Welcome back, " + currentProfile.full_name + "!");
+                } catch (err) {
+                    showToast(err.message || "Login failed.", false);
+                }
+            } else {
+                showToast("Demo Login Successful!");
+                currentProfile = {
+                    full_name: "Demo Creator",
+                    instagram_handle: "@democreator",
+                    followers_count: 52000,
+                    avg_views: 38000,
+                    status: 'approved',
+                    dp_url: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&q=80'
+                };
+                localStorage.setItem('cityfame_creator', JSON.stringify(currentProfile));
+                renderDashboard();
+                switchState('dashboard');
+            }
+
+            btn.disabled = false;
+            btn.innerText = 'Log In';
+        }
+
+        async function refreshCurrentProfile() {
+            if (!currentProfile || !currentProfile.id || !window.cityfameSupabase) return;
+            try {
+                const { data } = await window.cityfameSupabase
+                    .from('influencers')
+                    .select('*')
+                    .eq('id', currentProfile.id)
+                    .single();
+                if (data) {
+                    currentProfile = data;
+                    localStorage.setItem('cityfame_creator', JSON.stringify(currentProfile));
+                }
+            } catch (e) {}
+        }
+
+        async function handleForgotPassword(e) {
+            e.preventDefault();
+            alert("If you have forgotten your password, please contact Dominal Technology support at support@dominal.in or via WhatsApp.");
+        }
+
+        function handleLogout() {
+            localStorage.removeItem('cityfame_creator');
+            currentProfile = null;
+            showToast("Logged out successfully");
+            switchState('landing');
+        }
+
+        async function loadDashboardData() {
+            if (!currentUser || !window.cityfameSupabase) return;
+
+            try {
+                // Load Influencer profile
+                const { data: prof } = await window.cityfameSupabase
+                    .from('influencers')
+                    .select('*')
+                    .eq('id', currentUser.id)
+                    .single();
+
+                if (prof) currentProfile = prof;
+
+                renderDashboard();
+                await fetchWorksAndEnquiries();
+            } catch (err) {
+                console.warn("Error loading dashboard data", err);
+            }
+        }
+
+        function renderDashboard() {
+            if (!currentProfile) return;
+            document.getElementById('dash-name').innerText = currentProfile.full_name || 'Creator';
+            document.getElementById('dash-handle').innerText = currentProfile.instagram_handle || '@handle';
+            document.getElementById('dash-followers').innerText = formatCount(currentProfile.followers_count);
+            document.getElementById('dash-views').innerText = formatCount(currentProfile.avg_views);
+            document.getElementById('dash-totalviews').innerText = formatCount(currentProfile.total_views || 0);
+            document.getElementById('dash-dp').src = currentProfile.dp_url || 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=300&q=80';
+
+            const badge = document.getElementById('dash-status-badge');
+            const st = currentProfile.status || 'pending';
+            badge.className = `badge badge-${st}`;
+            badge.innerText = st.toUpperCase();
+
+            // Populate edit profile fields
+            document.getElementById('edit-fullname').value = currentProfile.full_name || '';
+            document.getElementById('edit-handle').value = currentProfile.instagram_handle || '';
+            document.getElementById('edit-phone').value = currentProfile.contact_number || '';
+            document.getElementById('edit-followers').value = currentProfile.followers_count || '';
+            document.getElementById('edit-views').value = currentProfile.avg_views || '';
+            document.getElementById('edit-totalviews').value = currentProfile.total_views || '';
+        }
+
+        async function handleFullProfileUpdate(e) {
+            e.preventDefault();
+            const btn = document.getElementById('edit-save-btn');
+            btn.disabled = true;
+            btn.innerText = 'Saving Changes...';
+
+            const newName = document.getElementById('edit-fullname').value.trim();
+            const newHandle = document.getElementById('edit-handle').value.trim();
+            const newPhone = document.getElementById('edit-phone').value.trim();
+            const newFollowers = parseInt(document.getElementById('edit-followers').value);
+            const newViews = parseInt(document.getElementById('edit-views').value);
+            const newTotalViews = parseInt(document.getElementById('edit-totalviews').value) || 0;
+            const newPassword = document.getElementById('edit-password').value;
+            const newDpFile = document.getElementById('edit-dp').files[0];
+
+            let updatedFields = {
+                full_name: newName,
+                instagram_handle: newHandle,
+                contact_number: newPhone,
+                followers_count: newFollowers,
+                avg_views: newViews,
+                total_views: newTotalViews
+            };
+
+            if (newPassword && newPassword.trim().length > 0) {
+                updatedFields.password = newPassword.trim();
+            }
+
+            if (window.cityfameSupabase && currentProfile && currentProfile.id) {
+                try {
+                    // Upload new DP if selected
+                    if (newDpFile) {
+                        const fileExt = newDpFile.name.split('.').pop();
+                        const fileName = `${Date.now()}_${Math.random().toString(36).substring(7)}.${fileExt}`;
+                        const { error: uploadErr } = await window.cityfameSupabase.storage
+                            .from('dp')
+                            .upload(fileName, newDpFile, { upsert: true });
+
+                        if (!uploadErr) {
+                            const { data: pubUrlData } = window.cityfameSupabase.storage.from('dp').getPublicUrl(fileName);
+                            if (pubUrlData && pubUrlData.publicUrl) {
+                                updatedFields.dp_url = pubUrlData.publicUrl;
+                            }
+                        }
+                    }
+
+                    // Update Supabase row
+                    const { data: updatedData, error: dbErr } = await window.cityfameSupabase
+                        .from('influencers')
+                        .update(updatedFields)
+                        .eq('id', currentProfile.id)
+                        .select()
+                        .single();
+
+                    if (dbErr) throw dbErr;
+                    if (updatedData) currentProfile = updatedData;
+
+                } catch (err) {
+                    showToast(err.message || "Failed to update profile.", false);
+                    btn.disabled = false;
+                    btn.innerText = 'Save Profile Changes';
+                    return;
+                }
+            } else {
+                // Local mock fallback update
+                currentProfile = { ...currentProfile, ...updatedFields };
+            }
+
+            localStorage.setItem('cityfame_creator', JSON.stringify(currentProfile));
+            renderDashboard();
+            showToast("Profile updated successfully!");
+
+            btn.disabled = false;
+            btn.innerText = 'Save Profile Changes';
+        }
+
+        function previewWorkUrl(url) {
+            const box = document.getElementById('live-url-preview-box');
+            const content = document.getElementById('live-url-preview-content');
+            if (!url || url.trim().length < 10) {
+                box.style.display = 'none';
+                content.innerHTML = '';
+                return;
+            }
+            content.innerHTML = renderMediaEmbed(url.trim());
+            box.style.display = 'block';
+        }
+
+        async function fetchWorksAndEnquiries() {
+            if (!currentProfile || !currentProfile.id || !window.cityfameSupabase) return;
+
+            // Fetch works
+            const { data: works, error: worksErr } = await window.cityfameSupabase
+                .from('works')
+                .select('*')
+                .eq('influencer_id', currentProfile.id)
+                .order('created_at', { ascending: false });
+
+            if (worksErr) console.warn("Fetch works error:", worksErr);
+
+            const worksContainer = document.getElementById('dash-works-list');
+            if (works && works.length > 0) {
+                let html = '';
+                works.forEach(w => {
+                    html += renderMediaEmbed(w.url, w.id, 'deleteWork');
+                });
+                worksContainer.innerHTML = html;
+            } else {
+                worksContainer.innerHTML = `<p style="font-size: 0.82rem; color: var(--text-muted);">No featured works added yet.</p>`;
+            }
+
+            // Fetch enquiries
+            const { data: enq, error: enqErr } = await window.cityfameSupabase
+                .from('enquiries')
+                .select('*')
+                .eq('influencer_id', currentProfile.id)
+                .order('created_at', { ascending: false });
+
+            if (enqErr) console.warn("Fetch enquiries error:", enqErr);
+
+            const enqContainer = document.getElementById('dash-enquiries-list');
+            if (enq && enq.length > 0) {
+                let eHtml = '';
+                enq.forEach(eItem => {
+                    const dateStr = new Date(eItem.created_at).toLocaleDateString();
+                    eHtml += `
+                        <div style="background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 12px;">
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+                                <span style="font-weight: 700; font-size: 0.9rem;">${eItem.name}</span>
+                                <span style="font-size: 0.72rem; color: var(--text-muted);">${dateStr}</span>
+                            </div>
+                            <div style="font-size: 0.82rem; font-weight: 600; color: var(--text-primary); margin-bottom: 4px;">📞 ${eItem.contact_number}</div>
+                            ${eItem.message ? `<div style="font-size: 0.8rem; color: var(--text-secondary);">${eItem.message}</div>` : ''}
+                        </div>
+                    `;
+                });
+                enqContainer.innerHTML = eHtml;
+            } else {
+                enqContainer.innerHTML = `<p style="font-size: 0.82rem; color: var(--text-muted);">No brand enquiries received yet.</p>`;
+            }
+        }
+
+        async function handleAddWork(e) {
+            e.preventDefault();
+            const btn = document.getElementById('add-work-btn');
+            const input = document.getElementById('work-url');
+            const url = input.value.trim();
+            if (!url) return;
+
+            btn.disabled = true;
+            btn.innerText = 'Saving Reel...';
+
+            const platform = (url.includes('youtube.com') || url.includes('youtu.be')) ? 'youtube' : 'instagram';
+
+            if (window.cityfameSupabase && currentProfile && currentProfile.id) {
+                try {
+                    const { error } = await window.cityfameSupabase
+                        .from('works')
+                        .insert([{
+                            influencer_id: currentProfile.id,
+                            platform: platform,
+                            url: url
+                        }]);
+                    if (error) throw error;
+                    showToast("Featured Reel / Work added!");
+                } catch (err) {
+                    showToast(err.message || "Failed to save work link.", false);
+                }
+            } else {
+                showToast("Work link added to portfolio!");
+            }
+
+            input.value = '';
+            document.getElementById('live-url-preview-box').style.display = 'none';
+            btn.disabled = false;
+            btn.innerText = 'Add Reel / Video';
+
+            await fetchWorksAndEnquiries();
+        }
+
+        async function deleteWork(workId) {
+            if (!confirm("Are you sure you want to remove this work link?")) return;
+            if (window.cityfameSupabase) {
+                try {
+                    const { error } = await window.cityfameSupabase
+                        .from('works')
+                        .delete()
+                        .eq('id', workId);
+                    if (error) throw error;
+                } catch (err) {
+                    console.warn("Error deleting work:", err);
+                }
+            }
+            showToast("Work removed.");
+            await fetchWorksAndEnquiries();
+        }
+
+        async function refreshDashboard(btn) {
+            const icon = document.getElementById('refresh-spin-icon');
+            if (icon) icon.classList.add('spin');
+
+            await refreshCurrentProfile();
+            renderDashboard();
+            await fetchWorksAndEnquiries();
+
+            setTimeout(() => {
+                if (icon) icon.classList.remove('spin');
+                showToast("Dashboard refreshed!");
+            }, 600);
+        }
+    </script>
+</body>
+</html>
