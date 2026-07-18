@@ -1,8 +1,9 @@
 // ========================================================
-// CityFame Service Worker (Network-First Strategy with Offline Fallback)
+// CityFame Service Worker (Dynamic Version-less Auto-Updating Strategy)
+// Always serves live website updates instantly, with offline fallback.
 // ========================================================
 
-const CACHE_NAME = 'cityfame-cache-v3';
+const DYNAMIC_CACHE_NAME = 'cityfame-app-shell-live';
 const ASSETS_TO_CACHE = [
     '/',
     '/welcome.html',
@@ -17,25 +18,25 @@ const ASSETS_TO_CACHE = [
     '/manifest.json'
 ];
 
-// Install Event - Pre-cache Static Shell
+// Install Event - Pre-cache Static Shell & Instantly Skip Waiting
 self.addEventListener('install', (event) => {
     event.waitUntil(
-        caches.open(CACHE_NAME).then((cache) => {
-            console.log('CityFame SW: Pre-caching app shell assets');
+        caches.open(DYNAMIC_CACHE_NAME).then((cache) => {
+            console.log('CityFame SW: Pre-caching live app shell');
             return cache.addAll(ASSETS_TO_CACHE);
         })
     );
     self.skipWaiting();
 });
 
-// Activate Event - Instantly Delete All Old Cache Versions
+// Activate Event - Instantly Claim Clients & Clean Up Old Cache Stores
 self.addEventListener('activate', (event) => {
     event.waitUntil(
         caches.keys().then((cacheNames) => {
             return Promise.all(
                 cacheNames.map((cache) => {
-                    if (cache !== CACHE_NAME) {
-                        console.log('CityFame SW: Purging old cache version:', cache);
+                    if (cache !== DYNAMIC_CACHE_NAME) {
+                        console.log('CityFame SW: Purging legacy cache:', cache);
                         return caches.delete(cache);
                     }
                 })
@@ -45,12 +46,11 @@ self.addEventListener('activate', (event) => {
     self.clients.claim();
 });
 
-// Fetch Event - Network-First Strategy (Instant Live Deployment + Offline Cache Fallback)
+// Fetch Event - Live Network First (Direct Updates) with Offline Cache Fallback
 self.addEventListener('fetch', (event) => {
-    // Only intercept GET requests
     if (event.request.method !== 'GET') return;
 
-    // Skip Supabase API calls from SW cache to keep dynamic database queries live
+    // Skip Supabase database API requests from SW cache
     if (event.request.url.includes('supabase.co')) {
         return;
     }
@@ -58,27 +58,27 @@ self.addEventListener('fetch', (event) => {
     event.respondWith(
         fetch(event.request)
             .then((networkResponse) => {
-                // If valid network response, update cache in background
+                // If live network fetch succeeds, cache fresh copy and return immediately
                 if (networkResponse && networkResponse.status === 200 && networkResponse.type === 'basic') {
                     const responseClone = networkResponse.clone();
-                    caches.open(CACHE_NAME).then((cache) => {
+                    caches.open(DYNAMIC_CACHE_NAME).then((cache) => {
                         cache.put(event.request, responseClone);
                     });
                 }
                 return networkResponse;
             })
             .catch(() => {
-                // If offline or network fails, fallback to cache
+                // If offline or network fails, serve cached version
                 return caches.match(event.request).then((cachedResponse) => {
                     if (cachedResponse) {
                         return cachedResponse;
                     }
-                    // If HTML page request and not in cache, fallback to index.html
-                    if (event.request.headers.get('accept') && event.request.headers.get('accept').includes('text/html')) {
+                    if (event.request.headers.get('accept')?.includes('text/html')) {
                         return caches.match('/index.html');
                     }
                 });
             })
     );
 });
+
 

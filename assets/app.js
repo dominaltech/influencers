@@ -2,14 +2,28 @@
 // CityFame Shared Application Utilities
 // ========================================================
 
-// 1. Service Worker Registration
+// 1. Service Worker Registration (Auto-Updating)
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
-        navigator.serviceWorker.register('/sw.js')
-            .then(reg => console.log('CityFame PWA: SW registered successfully', reg.scope))
+        navigator.serviceWorker.register('/sw.js', { updateViaCache: 'none' })
+            .then(reg => {
+                // Instantly check for live updates on every page load
+                reg.update();
+                console.log('CityFame PWA: SW active & auto-updating', reg.scope);
+            })
             .catch(err => console.warn('CityFame PWA: SW registration failed', err));
+
+        // Auto reload client when a new service worker replaces the old controller
+        let isRefreshing = false;
+        navigator.serviceWorker.addEventListener('controllerchange', () => {
+            if (!isRefreshing) {
+                isRefreshing = true;
+                window.location.reload();
+            }
+        });
     });
 }
+
 
 // 2. City Storage Helpers
 const CITY_STORAGE_KEY = 'cityfame_city';
@@ -208,4 +222,41 @@ function closeSideDrawer() {
 function openEnquiriesPage() {
     window.location.href = 'enquiries.html';
 }
+
+// 9. Hardware & Browser Back Button History Manager
+// Native App Behavior: 
+// - Back button on any subpage (influencers, enquiries, settings, about) immediately returns to Home Page (index.html).
+// - Back button on Home Page requires double-tap within 2s to exit app.
+let lastBackPressTimestamp = 0;
+
+function setupAppBackHistoryManager() {
+    const currentPath = window.location.pathname.split('/').pop() || 'index.html';
+    const isHomePage = currentPath === 'index.html' || currentPath === '' || currentPath === '/';
+
+    if (isHomePage) {
+        // Push initial home state so Back button triggers popstate
+        history.pushState({ isHomeState: true }, '', location.href);
+
+        window.addEventListener('popstate', (e) => {
+            const now = Date.now();
+            if (now - lastBackPressTimestamp < 2000) {
+                // Second back tap within 2 seconds -> exit app / allow default back action
+                history.go(-1);
+            } else {
+                lastBackPressTimestamp = now;
+                showToast("Press BACK again to exit CityFame");
+                // Re-push home state to stay on home page
+                history.pushState({ isHomeState: true }, '', location.href);
+            }
+        });
+    } else {
+        // Sub-pages: Pressing Back takes user straight to Home Page (index.html)
+        window.addEventListener('popstate', (e) => {
+            window.location.replace('index.html');
+        });
+    }
+}
+
+document.addEventListener('DOMContentLoaded', setupAppBackHistoryManager);
+
 
