@@ -294,32 +294,50 @@
                     </form>
                 </div>
 
-                <!-- Section: My Works -->
-                <div style="background: var(--bg-primary); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 18px; margin-bottom: 20px;">
-                    <h3 style="font-size: 1rem; font-weight: 700; margin-bottom: 12px;">My Featured Works & Reels</h3>
-                    <form onsubmit="handleAddWork(event)" style="margin-bottom: 14px;">
+                <!-- Section: My Reels & Works -->
+                <div style="background: var(--bg-primary); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 18px; margin-bottom: 20px; overflow: hidden;">
+                    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px;">
+                        <h3 style="font-size: 1rem; font-weight: 700;">🎬 My Reels</h3>
+                        <span style="font-size: 0.72rem; color: var(--text-muted); font-weight: 600;">Tap embed to open in Instagram</span>
+                    </div>
+
+                    <!-- Add New Reel Form -->
+                    <form onsubmit="handleAddWork(event)" style="margin-bottom: 18px; background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 14px;">
+                        <div style="font-size: 0.78rem; font-weight: 700; color: var(--text-secondary); text-transform: uppercase; margin-bottom: 10px;">Add New Reel / Video</div>
                         <div class="form-group">
-                            <label class="form-label">Paste Instagram Reel or YouTube URL</label>
+                            <label class="form-label">Instagram Reel or YouTube URL <span style="color:#ef4444">*</span></label>
                             <input type="url" id="work-url" class="form-control" placeholder="https://www.instagram.com/reel/..." required oninput="previewWorkUrl(this.value)">
                         </div>
 
-                        <!-- Live Instant Preview Box -->
-                        <div id="live-url-preview-box" style="margin-bottom: 14px; display: none;">
-                            <div style="font-size: 0.72rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; margin-bottom: 4px;">Live Embed Preview</div>
-                            <div id="live-url-preview-content"></div>
+                        <div class="filter-row" style="margin-bottom: 10px;">
+                            <div class="form-group" style="margin: 0; flex: 1;">
+                                <label class="form-label">Reel Views <span style="color: var(--text-muted); font-weight: 500;">(optional)</span></label>
+                                <input type="number" id="work-views" class="form-control" placeholder="e.g. 450000" min="0">
+                            </div>
+                            <div class="form-group" style="margin: 0; flex: 1;">
+                                <label class="form-label">Reel Likes <span style="color: var(--text-muted); font-weight: 500;">(optional)</span></label>
+                                <input type="number" id="work-likes" class="form-control" placeholder="e.g. 12000" min="0">
+                            </div>
                         </div>
 
-                        <button type="submit" class="btn-primary btn-sm" id="add-work-btn">Add Reel / Video</button>
+                        <!-- Live Instant Preview Box -->
+                        <div id="live-url-preview-box" style="margin-bottom: 12px; display: none; overflow: hidden; max-width: 100%;">
+                            <div style="font-size: 0.72rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; margin-bottom: 4px;">Live Preview</div>
+                            <div id="live-url-preview-content" style="max-width: 100%; overflow: hidden;"></div>
+                        </div>
+
+                        <button type="submit" class="btn-primary btn-sm" id="add-work-btn" style="width: 100%; margin-top: 4px;">+ Add Reel</button>
                     </form>
-                    
-                    <div id="dash-works-list" class="works-grid">
-                        <p style="font-size: 0.82rem; color: var(--text-muted);">No featured works added yet.</p>
+
+                    <!-- Saved Reels List -->
+                    <div id="dash-works-list" style="display: flex; flex-direction: column; gap: 14px; overflow: hidden; max-width: 100%;">
+                        <p style="font-size: 0.82rem; color: var(--text-muted);">No reels added yet. Paste a reel link above to add your first reel!</p>
                     </div>
                 </div>
 
                 <!-- Section: Enquiries Received -->
-                <div style="background: var(--bg-primary); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 16px;">
-                    <h3 style="font-size: 0.98rem; margin-bottom: 12px;">Brand Enquiries Received</h3>
+                <div style="background: var(--bg-primary); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 16px; margin-bottom: 20px;">
+                    <h3 style="font-size: 0.98rem; margin-bottom: 12px;">📩 Brand Enquiries Received</h3>
                     <div id="dash-enquiries-list" style="display: flex; flex-direction: column; gap: 10px;">
                         <p style="font-size: 0.82rem; color: var(--text-muted);">No brand enquiries received yet.</p>
                     </div>
@@ -342,7 +360,37 @@
                 <span>About Us</span>
             </a>
         </nav>
+
+        <!-- Edit Reel Modal (fixed overlay) -->
+        <div id="edit-reel-modal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.55); z-index:9999; align-items:center; justify-content:center; padding:20px;">
+            <div style="background:#fff; border-radius: var(--radius-md); padding:20px; width:100%; max-width:420px; box-shadow: var(--shadow-lg);">
+                <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:16px;">
+                    <h3 style="font-size:1rem; font-weight:700;">✏️ Edit Reel Info</h3>
+                    <button onclick="closeEditReelModal()" style="background:none; border:none; cursor:pointer; font-size:1.4rem; color: var(--text-muted); line-height:1;">×</button>
+                </div>
+                <input type="hidden" id="edit-reel-id">
+                <div class="form-group">
+                    <label class="form-label">Reel URL</label>
+                    <input type="url" id="edit-reel-url" class="form-control" placeholder="https://www.instagram.com/reel/...">
+                </div>
+                <div class="filter-row" style="margin-bottom: 14px;">
+                    <div class="form-group" style="margin:0; flex:1;">
+                        <label class="form-label">Reel Views <span style="color:var(--text-muted); font-weight:500;">(optional)</span></label>
+                        <input type="number" id="edit-reel-views" class="form-control" placeholder="e.g. 450000" min="0">
+                    </div>
+                    <div class="form-group" style="margin:0; flex:1;">
+                        <label class="form-label">Reel Likes <span style="color:var(--text-muted); font-weight:500;">(optional)</span></label>
+                        <input type="number" id="edit-reel-likes" class="form-control" placeholder="e.g. 12000" min="0">
+                    </div>
+                </div>
+                <div style="display:flex; gap:10px;">
+                    <button onclick="closeEditReelModal()" class="btn-secondary btn-sm" style="flex:1;">Cancel</button>
+                    <button onclick="saveEditReel()" class="btn-primary btn-sm" id="save-edit-reel-btn" style="flex:1;">Save Changes</button>
+                </div>
+            </div>
+        </div>
     </div>
+
 
     <script src="assets/supabase-client.js"></script>
     <script src="assets/app.js"></script>
@@ -350,17 +398,18 @@
         let currentProfile = null;
 
         document.addEventListener('DOMContentLoaded', async () => {
-            // Check logged in session from localStorage
             const savedCreator = localStorage.getItem('cityfame_creator');
             if (savedCreator) {
                 try {
                     currentProfile = JSON.parse(savedCreator);
-                    // Refresh profile from Supabase to get latest data
-                    await refreshCurrentProfile();
-                    renderDashboard();
                     switchState('dashboard');
-                    // Always fetch works & enquiries fresh from DB on load
-                    await fetchWorksAndEnquiries();
+                    renderDashboard();
+                    // Always load fresh data from DB — no refresh button needed
+                    if (window.cityfameSupabase) {
+                        await refreshCurrentProfile();
+                        renderDashboard();
+                        await fetchWorksAndEnquiries();
+                    }
                     return;
                 } catch (e) {
                     localStorage.removeItem('cityfame_creator');
@@ -513,11 +562,9 @@
 
                     currentProfile = data;
                     localStorage.setItem('cityfame_creator', JSON.stringify(currentProfile));
-
                     renderDashboard();
                     switchState('dashboard');
-                    showToast("Welcome back, " + currentProfile.full_name + "!");
-                    // Load works and enquiries immediately after login
+                    showToast('Welcome back, ' + currentProfile.full_name + '!');
                     await fetchWorksAndEnquiries();
                 } catch (err) {
                     showToast(err.message || "Login failed.", false);
@@ -715,13 +762,29 @@
             if (works && works.length > 0) {
                 let html = '';
                 works.forEach(w => {
-                    html += renderMediaEmbed(w.url, w.id, 'deleteWork');
+                    const viewsHtml = w.reel_views ? `<span style="display:inline-flex;align-items:center;gap:4px;font-size:0.78rem;font-weight:700;color:var(--text-secondary);">👁️ ${formatCount(w.reel_views)} views</span>` : '';
+                    const likesHtml = w.reel_likes ? `<span style="display:inline-flex;align-items:center;gap:4px;font-size:0.78rem;font-weight:700;color:var(--text-secondary);">❤️ ${formatCount(w.reel_likes)} likes</span>` : '';
+                    const statsRow = (viewsHtml || likesHtml) ? `<div style="display:flex;gap:12px;padding:8px 0 4px;flex-wrap:wrap;">${viewsHtml}${likesHtml}</div>` : '';
+                    const escUrl = (w.url || '').replace(/'/g, "\\'");
+                    const escViews = w.reel_views || '';
+                    const escLikes = w.reel_likes || '';
+
+                    html += `
+                        <div style="border:1px solid var(--border-color);border-radius:var(--radius-md);overflow:hidden;background:#fff;max-width:100%;">
+                            ${renderMediaEmbed(w.url)}
+                            ${statsRow}
+                            <div style="display:flex;gap:8px;padding:8px 12px;border-top:1px solid var(--border-subtle);background:var(--bg-secondary);">
+                                <button onclick="openEditReelModal('${w.id}','${escUrl}','${escViews}','${escLikes}')" class="btn-secondary btn-sm" style="flex:1;font-size:0.78rem;">✏️ Edit</button>
+                                <button onclick="deleteWork('${w.id}')" class="btn-secondary btn-sm" style="flex:1;font-size:0.78rem;color:#ef4444;border-color:#fecaca;background:#fef2f2;">🗑️ Delete</button>
+                            </div>
+                        </div>
+                    `;
                 });
                 worksContainer.innerHTML = html;
                 // Hydrate all Instagram embeds after injecting HTML
                 processInstagramEmbeds();
             } else {
-                worksContainer.innerHTML = `<p style="font-size: 0.82rem; color: var(--text-muted);">No featured works added yet.</p>`;
+                worksContainer.innerHTML = `<p style="font-size: 0.82rem; color: var(--text-muted);">No reels added yet. Paste a reel link above to add your first reel!</p>`;
             }
 
             // Fetch enquiries
@@ -762,8 +825,13 @@
             const url = input.value.trim();
             if (!url) return;
 
+            const reelViewsRaw = document.getElementById('work-views').value;
+            const reelLikesRaw = document.getElementById('work-likes').value;
+            const reelViews = reelViewsRaw ? parseInt(reelViewsRaw) : null;
+            const reelLikes = reelLikesRaw ? parseInt(reelLikesRaw) : null;
+
             btn.disabled = true;
-            btn.innerText = 'Saving Reel...';
+            btn.innerText = 'Saving...';
 
             const platform = (url.includes('youtube.com') || url.includes('youtu.be')) ? 'youtube' : 'instagram';
 
@@ -774,39 +842,90 @@
                         .insert([{
                             influencer_id: currentProfile.id,
                             platform: platform,
-                            url: url
+                            url: url,
+                            reel_views: reelViews,
+                            reel_likes: reelLikes
                         }]);
                     if (error) throw error;
-                    showToast("Featured Reel / Work added!");
+                    showToast('Reel added successfully!');
                 } catch (err) {
-                    showToast(err.message || "Failed to save work link.", false);
+                    showToast(err.message || 'Failed to save reel.', false);
+                    btn.disabled = false;
+                    btn.innerText = '+ Add Reel';
+                    return;
                 }
             } else {
-                showToast("Work link added to portfolio!");
+                showToast('Reel added to portfolio!');
             }
 
             input.value = '';
+            document.getElementById('work-views').value = '';
+            document.getElementById('work-likes').value = '';
             document.getElementById('live-url-preview-box').style.display = 'none';
             btn.disabled = false;
-            btn.innerText = 'Add Reel / Video';
-
+            btn.innerText = '+ Add Reel';
             await fetchWorksAndEnquiries();
         }
 
         async function deleteWork(workId) {
-            if (!confirm("Are you sure you want to remove this work link?")) return;
+            if (!confirm('Are you sure you want to remove this reel?')) return;
+            if (window.cityfameSupabase) {
+                try {
+                    const { error } = await window.cityfameSupabase
+                        .from('works').delete().eq('id', workId);
+                    if (error) throw error;
+                } catch (err) {
+                    console.warn('Error deleting work:', err);
+                }
+            }
+            showToast('Reel removed.');
+            await fetchWorksAndEnquiries();
+        }
+
+        function openEditReelModal(workId, url, reelViews, reelLikes) {
+            document.getElementById('edit-reel-id').value = workId;
+            document.getElementById('edit-reel-url').value = url || '';
+            document.getElementById('edit-reel-views').value = reelViews || '';
+            document.getElementById('edit-reel-likes').value = reelLikes || '';
+            document.getElementById('edit-reel-modal').style.display = 'flex';
+        }
+
+        function closeEditReelModal() {
+            document.getElementById('edit-reel-modal').style.display = 'none';
+        }
+
+        async function saveEditReel() {
+            const btn = document.getElementById('save-edit-reel-btn');
+            btn.disabled = true;
+            btn.innerText = 'Saving...';
+
+            const workId = document.getElementById('edit-reel-id').value;
+            const url = document.getElementById('edit-reel-url').value.trim();
+            const reelViewsRaw = document.getElementById('edit-reel-views').value;
+            const reelLikesRaw = document.getElementById('edit-reel-likes').value;
+            const reelViews = reelViewsRaw ? parseInt(reelViewsRaw) : null;
+            const reelLikes = reelLikesRaw ? parseInt(reelLikesRaw) : null;
+
+            if (!url) { showToast('URL cannot be empty.', false); btn.disabled = false; btn.innerText = 'Save Changes'; return; }
+
+            const platform = (url.includes('youtube.com') || url.includes('youtu.be')) ? 'youtube' : 'instagram';
+
             if (window.cityfameSupabase) {
                 try {
                     const { error } = await window.cityfameSupabase
                         .from('works')
-                        .delete()
+                        .update({ url, platform, reel_views: reelViews, reel_likes: reelLikes })
                         .eq('id', workId);
                     if (error) throw error;
+                    showToast('Reel updated!');
                 } catch (err) {
-                    console.warn("Error deleting work:", err);
+                    showToast(err.message || 'Failed to update reel.', false);
                 }
             }
-            showToast("Work removed.");
+
+            btn.disabled = false;
+            btn.innerText = 'Save Changes';
+            closeEditReelModal();
             await fetchWorksAndEnquiries();
         }
 
