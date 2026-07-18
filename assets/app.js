@@ -111,8 +111,10 @@ function renderMediaEmbed(url, workId = null, onDelete = null) {
         `;
     }
 
+    const cleanUrl = url.trim();
+
     // YouTube / YouTube Shorts
-    const ytMatch = url.match(/(?:youtu\.be\/|v\/|u\/\w\/|embed\/|shorts\/|watch\?v=|\&v=)([^#\&\?]*)/i);
+    const ytMatch = cleanUrl.match(/(?:youtu\.be\/|v\/|u\/\w\/|embed\/|shorts\/|watch\?v=|\&v=)([^#\&\?]*)/i);
     if (ytMatch && ytMatch[1] && ytMatch[1].length === 11) {
         const videoId = ytMatch[1];
         return `
@@ -124,16 +126,34 @@ function renderMediaEmbed(url, workId = null, onDelete = null) {
     }
 
     // Instagram Reel / Post / Share
-    const igMatch = url.match(/(?:reel|reels|p|share\/reel)\/([A-Za-z0-9_-]+)/i);
+    const igMatch = cleanUrl.match(/(?:reel|reels|p|share\/reel)\/([A-Za-z0-9_-]+)/i);
     if (igMatch && igMatch[1]) {
         const reelId = igMatch[1];
+
+        // Trigger Instagram Embeds Hydration if script loaded
+        setTimeout(() => {
+            if (window.instgrm && window.instgrm.Embeds && typeof window.instgrm.Embeds.process === 'function') {
+                try {
+                    window.instgrm.Embeds.process();
+                } catch (e) {
+                    console.warn("CityFame: Instgrm process error", e);
+                }
+            }
+        }, 100);
+
         return `
-            <div class="work-item" style="border-radius: var(--radius-md); overflow: hidden; background: #ffffff; border: 1px solid var(--border-color); margin-top: 10px;">
-                <iframe src="https://www.instagram.com/p/${reelId}/embed/" style="width:100%; min-height:450px; border:none; display:block;" scrolling="no" allowtransparency="true"></iframe>
+            <div class="work-item" style="border-radius: var(--radius-md); overflow: hidden; background: #ffffff; border: 1px solid var(--border-color); margin-top: 10px; text-align: center;">
+                <blockquote class="instagram-media" data-instgrm-permalink="https://www.instagram.com/reel/${reelId}/" data-instgrm-version="14" style="background:#FFF; border:0; border-radius:12px; box-shadow:none; margin: 0 auto; width:100%;">
+                    <div style="padding:16px;">
+                        <a href="https://www.instagram.com/reel/${reelId}/" target="_blank" style="background:#FFFFFF; line-height:0; padding:0 0; text-align:center; text-decoration:none; width:100%; font-weight:700; color:#000;">
+                            ▶ View Instagram Reel (@${reelId})
+                        </a>
+                    </div>
+                </blockquote>
                 <div style="padding: 10px 14px; background: var(--bg-secondary); border-top: 1px solid var(--border-subtle); display: flex; align-items: center; justify-content: space-between;">
-                    <a href="https://www.instagram.com/p/${reelId}/" target="_blank" style="font-size: 0.8rem; font-weight: 700; color: var(--accent-black); text-decoration: none; display: inline-flex; align-items: center; gap: 4px;">
+                    <a href="https://www.instagram.com/reel/${reelId}/" target="_blank" style="font-size: 0.8rem; font-weight: 700; color: var(--accent-black); text-decoration: none; display: inline-flex; align-items: center; gap: 4px;">
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
-                        Open Reel on Instagram
+                        Watch on Instagram App
                     </a>
                 </div>
                 ${deleteBtnHtml}
@@ -141,12 +161,13 @@ function renderMediaEmbed(url, workId = null, onDelete = null) {
         `;
     }
 
-    // Generic Fallback Link Card
+    // Diagnostic fallback link card if URL format unrecognized
+    console.warn("CityFame: Reel URL format unmatched by pattern:", cleanUrl);
     return `
         <div class="work-item" style="padding: 14px; text-align: center; background: var(--bg-secondary); border-radius: var(--radius-md); border: 1px solid var(--border-color); margin-top: 10px;">
-            <div style="font-size: 0.82rem; font-weight: 600; color: var(--text-secondary); margin-bottom: 8px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${url}</div>
-            <a href="${url}" target="_blank" class="btn-secondary btn-sm" style="text-decoration: none; width: auto; display: inline-flex;">
-                ▶ View Work Link
+            <div style="font-size: 0.82rem; font-weight: 600; color: var(--text-secondary); margin-bottom: 8px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${cleanUrl}</div>
+            <a href="${cleanUrl}" target="_blank" class="btn-secondary btn-sm" style="text-decoration: none; width: auto; display: inline-flex;">
+                ▶ Open Featured Link
             </a>
             ${deleteBtnHtml}
         </div>
