@@ -163,7 +163,7 @@
             <div style="margin-bottom: 16px;">
                 <div style="display: flex; align-items: center; justify-content: space-between;">
                     <!-- Search Icon Button -->
-                    <button id="search-toggle-btn" class="icon-btn" onclick="toggleSearchBox()" style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-full); padding: 8px; display: flex; align-items: center; justify-content: center; width: 36px; height: 36px; box-shadow: var(--shadow-sm);" title="Search Creators">
+                    <button id="search-toggle-btn" class="icon-btn" onclick="openSearchModal()" style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-full); padding: 8px; display: flex; align-items: center; justify-content: center; width: 36px; height: 36px; box-shadow: var(--shadow-sm);" title="Search Creators">
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--text-primary);">
                             <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
                         </svg>
@@ -174,9 +174,17 @@
                     </div>
                 </div>
 
-                <!-- Toggleable Search Input -->
-                <div id="search-input-container" style="display: none; margin-top: 10px; position: relative;">
-                    <input type="text" id="influencer-search-input" class="form-control" placeholder="Search creators by name, @handle or city..." oninput="applyFilters()" style="padding-left: 14px; padding-right: 14px; border-radius: var(--radius-full); font-weight: 600; background: var(--bg-card); border: 1px solid var(--border-color); box-shadow: var(--shadow-sm);">
+                <!-- Floating Search Modal -->
+                <div id="search-modal" class="modal-overlay" onclick="closeSearchModal()">
+                    <div class="modal-sheet" onclick="event.stopPropagation()" style="padding: 20px;">
+                        <div class="modal-header" style="margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center;">
+                            <h3 style="font-size: 1.05rem; font-weight: 800; margin: 0;">Search Creators</h3>
+                            <button class="icon-btn" onclick="closeSearchModal()" style="border: 1px solid var(--border-color); border-radius: var(--radius-full); padding: 6px; display: flex; align-items: center; justify-content: center;">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                            </button>
+                        </div>
+                        <input type="text" id="influencer-search-input" class="form-control" placeholder="Search creators by name, @handle or city..." oninput="handleSearchInput(event)" onkeydown="handleSearchKeyDown(event)" style="padding-left: 14px; padding-right: 14px; border-radius: var(--radius-full); font-weight: 600; background: var(--bg-card); border: 1px solid var(--border-color); box-shadow: var(--shadow-sm);">
+                    </div>
                 </div>
             </div>
 
@@ -391,20 +399,42 @@
             if (el) el.innerText = count.toLocaleString();
         }
 
-        function toggleSearchBox() {
-            const container = document.getElementById('search-input-container');
-            if (container) {
-                if (container.style.display === 'none') {
-                    container.style.display = 'block';
+        let searchDebounceTimer = null;
+
+        function openSearchModal() {
+            const modal = document.getElementById('search-modal');
+            if (modal) {
+                modal.classList.add('active');
+                setTimeout(() => {
                     document.getElementById('influencer-search-input')?.focus();
-                } else {
-                    container.style.display = 'none';
-                    const input = document.getElementById('influencer-search-input');
-                    if (input) {
-                        input.value = '';
-                        applyFilters();
-                    }
-                }
+                }, 100);
+            }
+        }
+
+        function closeSearchModal() {
+            const modal = document.getElementById('search-modal');
+            if (modal) {
+                modal.classList.remove('active');
+            }
+            if (searchDebounceTimer) {
+                clearTimeout(searchDebounceTimer);
+                searchDebounceTimer = null;
+            }
+        }
+
+        function handleSearchInput(e) {
+            applyFilters();
+
+            // Auto-close search modal 1.2 seconds after the user stops typing
+            if (searchDebounceTimer) clearTimeout(searchDebounceTimer);
+            searchDebounceTimer = setTimeout(() => {
+                closeSearchModal();
+            }, 1200);
+        }
+
+        function handleSearchKeyDown(e) {
+            if (e.key === 'Enter') {
+                closeSearchModal();
             }
         }
 

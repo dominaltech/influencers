@@ -324,5 +324,16 @@ async function triggerPwaInstall() {
     }
 }
 
+// Global back button override: any back navigation on sub-pages goes directly to index.html without history loop
+document.addEventListener('DOMContentLoaded', () => {
+    const currentPath = window.location.pathname.split('/').pop() || 'index.html';
+    if (currentPath !== 'index.html' && currentPath !== '') {
+        window.history.pushState({ page: 'subpage' }, '', window.location.href);
+        window.addEventListener('popstate', function(event) {
+            window.location.replace('index.html');
+        });
+    }
+});
+
 
 
