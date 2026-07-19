@@ -421,11 +421,15 @@
         }
 
         function applyFilters() {
-            const followersFilter = document.getElementById('filter-followers').value;
-            const viewsFilter = document.getElementById('filter-views').value;
-            const searchQuery = (document.getElementById('influencer-search-input')?.value || '').toLowerCase().trim();
+            const followersEl = document.getElementById('filter-followers');
+            const viewsEl = document.getElementById('filter-views');
+            const followersFilter = followersEl ? followersEl.value : 'all';
+            const viewsFilter = viewsEl ? viewsEl.value : 'all';
+            const searchInput = document.getElementById('influencer-search-input');
+            const searchQuery = (searchInput ? searchInput.value : '').toLowerCase().trim();
 
-            let filtered = allInfluencers.filter(item => {
+            let filtered = (allInfluencers || []).filter(item => {
+                if (!item) return false;
                 let matchFollowers = checkBucket(item.followers_count, followersFilter);
                 let matchViews = checkBucket(item.avg_views, viewsFilter);
                 let matchSearch = !searchQuery || 
@@ -440,21 +444,24 @@
         }
 
         function checkBucket(val, bucket) {
-            if (bucket === 'all') return true;
-            if (bucket === '2k+') return val >= 2000;
-            if (bucket === '5k+') return val >= 5000;
-            if (bucket === '10k+') return val >= 10000;
-            if (bucket === '25k+') return val >= 25000;
-            if (bucket === '50k+') return val >= 50000;
-            if (bucket === '100k+') return val >= 100000;
-            if (bucket === '250k+') return val >= 250000;
-            if (bucket === '500k+') return val >= 500000;
+            if (!bucket || bucket === 'all') return true;
+            const num = Number(val) || 0;
+            if (bucket === '2k+') return num >= 2000;
+            if (bucket === '5k+') return num >= 5000;
+            if (bucket === '10k+') return num >= 10000;
+            if (bucket === '25k+') return num >= 25000;
+            if (bucket === '50k+') return num >= 50000;
+            if (bucket === '100k+') return num >= 100000;
+            if (bucket === '250k+') return num >= 250000;
+            if (bucket === '500k+') return num >= 500000;
             return true;
         }
 
         function renderFeed(items) {
             const container = document.getElementById('influencer-feed');
-            if (items.length === 0) {
+            if (!container) return;
+
+            if (!items || items.length === 0) {
                 container.innerHTML = `
                     <div class="empty-state">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
@@ -472,17 +479,20 @@
 
             let html = '';
             items.forEach(inf => {
-                const handleClean = inf.instagram_handle.replace(/^@/, '');
+                if (!inf) return;
+                const handleRaw = inf.instagram_handle || '';
+                const handleClean = handleRaw.replace(/^@/, '');
                 const dp = inf.dp_url || 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=300&q=80';
+                const displayName = inf.full_name || handleClean || 'Creator';
 
                 html += `
-                    <div class="influencer-card" onclick="openProfileModal('${inf.id}')" title="Click to view ${inf.full_name}'s Profile & Reels">
+                    <div class="influencer-card" onclick="openProfileModal('${inf.id}')" title="Click to view ${displayName}'s Profile & Reels">
                         <div class="influencer-card-header">
                             <div class="influencer-dp-wrapper">
-                                <img src="${dp}" alt="${inf.full_name}" class="influencer-dp" onerror="this.src='https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=300&q=80'">
+                                <img src="${dp}" alt="${displayName}" class="influencer-dp" onerror="this.src='https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=300&q=80'">
                             </div>
                             <div class="influencer-info">
-                                <div class="influencer-name" style="font-size: 0.86rem; font-weight: 800; line-height: 1.2;">${inf.full_name}</div>
+                                <div class="influencer-name" style="font-size: 0.86rem; font-weight: 800; line-height: 1.2;">${displayName}</div>
                                 <div class="influencer-handle" style="font-size:0.72rem; color:var(--text-secondary); margin-top:2px;">
                                     @${handleClean}
                                 </div>
