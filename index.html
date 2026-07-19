@@ -405,7 +405,6 @@
                     const { data, error } = await window.cityfameSupabase
                         .from('influencers')
                         .select('*')
-                        .eq('status', 'approved')
                         .order('followers_count', { ascending: false });
 
                     if (error) throw error;
