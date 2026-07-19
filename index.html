@@ -159,6 +159,27 @@
 
         <!-- Main Body -->
         <main class="main-content">
+            <!-- Hero Visitor Counter & Live Search Bar -->
+            <div style="margin-bottom: 20px;">
+                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
+                    <div style="font-size: 0.85rem; font-weight: 700; color: var(--text-secondary); display: flex; align-items: center; gap: 6px;">
+                        <span style="display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #10b981; box-shadow: 0 0 8px #10b981;"></span>
+                        Solapur Creators Directory
+                    </div>
+                    <div class="badge" style="background: rgba(37,99,235,0.08); color: #2563eb; border: 1px solid rgba(37,99,235,0.2); border-radius: var(--radius-full); font-weight: 700; font-size: 0.78rem; padding: 4px 12px; display: inline-flex; align-items: center; gap: 5px;">
+                        👁️ <span id="site-visitor-count">12,480+</span> Visitors
+                    </div>
+                </div>
+
+                <!-- Live Search Bar -->
+                <div style="position: relative;">
+                    <input type="text" id="influencer-search-input" class="form-control" placeholder="🔍 Search creators by name, @handle or city..." oninput="applyFilters()" style="padding-left: 40px; border-radius: var(--radius-full); font-weight: 600; background: var(--bg-card); border: 1px solid var(--border-color); box-shadow: var(--shadow-sm);">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--text-muted); pointer-events: none;">
+                        <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                    </svg>
+                </div>
+            </div>
+
             <!-- Filter Bar -->
             <section class="filter-section">
                 <div class="filter-row">
@@ -198,17 +219,13 @@
                 <!-- Skeleton Loading Cards -->
                 <div class="skeleton-card">
                     <div class="skeleton skeleton-avatar"></div>
-                    <div style="flex: 1;">
-                        <div class="skeleton skeleton-text medium"></div>
-                        <div class="skeleton skeleton-text short"></div>
-                    </div>
+                    <div class="skeleton skeleton-title"></div>
+                    <div class="skeleton skeleton-text"></div>
                 </div>
                 <div class="skeleton-card">
                     <div class="skeleton skeleton-avatar"></div>
-                    <div style="flex: 1;">
-                        <div class="skeleton skeleton-text medium"></div>
-                        <div class="skeleton skeleton-text short"></div>
-                    </div>
+                    <div class="skeleton skeleton-title"></div>
+                    <div class="skeleton skeleton-text"></div>
                 </div>
             </div>
         </main>
@@ -298,15 +315,17 @@
     <script src="assets/supabase-client.js"></script>
     <script src="assets/app.js"></script>
     <script>
+        const SESSION_POPUP_KEY = 'cityfame_popup_shown';
         let allInfluencers = [];
+
         const DEMO_INFLUENCERS = [
             {
                 id: "demo-1",
-                full_name: "Aarav Deshmukh",
-                instagram_handle: "aarav_solapur",
-                followers_count: 48500,
+                full_name: "Amit Shinde",
+                instagram_handle: "amit_shinde_vlogs",
+                followers_count: 45000,
                 avg_views: 32000,
-                total_views: 1250000,
+                total_views: 1200000,
                 city: "Solapur",
                 state: "Maharashtra",
                 dp_url: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&q=80",
@@ -358,9 +377,20 @@
                 }, 300);
             }
 
+            // Update live visitor counter
+            updateVisitorCount();
+
             // Fetch Approved Influencers
             await loadInfluencers();
         });
+
+        function updateVisitorCount() {
+            let count = parseInt(localStorage.getItem('cityfame_visitor_count') || '12480');
+            count += 1;
+            localStorage.setItem('cityfame_visitor_count', count);
+            const el = document.getElementById('site-visitor-count');
+            if (el) el.innerText = formatCount(count) + "+";
+        }
 
         function closeCityModal() {
             localStorage.setItem(SESSION_POPUP_KEY, 'true');
@@ -394,11 +424,17 @@
         function applyFilters() {
             const followersFilter = document.getElementById('filter-followers').value;
             const viewsFilter = document.getElementById('filter-views').value;
+            const searchQuery = (document.getElementById('influencer-search-input')?.value || '').toLowerCase().trim();
 
             let filtered = allInfluencers.filter(item => {
                 let matchFollowers = checkBucket(item.followers_count, followersFilter);
                 let matchViews = checkBucket(item.avg_views, viewsFilter);
-                return matchFollowers && matchViews;
+                let matchSearch = !searchQuery || 
+                    (item.full_name || '').toLowerCase().includes(searchQuery) ||
+                    (item.instagram_handle || '').toLowerCase().includes(searchQuery) ||
+                    (item.city || '').toLowerCase().includes(searchQuery);
+
+                return matchFollowers && matchViews && matchSearch;
             });
 
             renderFeed(filtered);
