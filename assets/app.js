@@ -430,6 +430,21 @@ async function checkAndNotifyNewEnquiries() {
         const creator = JSON.parse(creatorData);
         if (!creator || !creator.id) return;
 
+        const { count: enquiryCount } = await window.cityfameSupabase
+            .from('enquiries')
+            .select('*', { count: 'exact', head: true })
+            .eq('influencer_id', creator.id);
+
+        const badgeEl = document.getElementById('header-dm-badge');
+        if (badgeEl) {
+            if (enquiryCount && enquiryCount > 0) {
+                badgeEl.innerText = enquiryCount > 99 ? '99+' : enquiryCount;
+                badgeEl.style.display = 'inline-flex';
+            } else {
+                badgeEl.style.display = 'none';
+            }
+        }
+
         const { data: latestEnquiries, error } = await window.cityfameSupabase
             .from('enquiries')
             .select('*')
