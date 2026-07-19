@@ -166,23 +166,15 @@
 
             <!-- Card 3: Notification Preferences -->
             <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 18px; margin-bottom: 16px; box-shadow: var(--shadow-sm);">
-                <h3 style="font-size: 0.95rem; font-weight: 700; margin-bottom: 14px;">Notifications</h3>
+                <h3 style="font-size: 0.95rem; font-weight: 700; margin-bottom: 14px;">Android & Web Push Notifications</h3>
                 <div style="display: flex; flex-direction: column; gap: 14px;">
-                    <label style="display: flex; align-items: center; justify-content: space-between; cursor: pointer;">
+                    <div style="display: flex; align-items: center; justify-content: space-between;">
                         <div>
                             <div style="font-weight: 600; font-size: 0.88rem;">New Brand Enquiry Alerts</div>
-                            <div style="font-size: 0.76rem; color: var(--text-muted);">Get instant notifications when a brand contacts you</div>
+                            <div style="font-size: 0.76rem; color: var(--text-muted);">Get real-time push notifications on Android & Web</div>
                         </div>
-                        <input type="checkbox" checked style="width: 18px; height: 18px; accent-color: #000;">
-                    </label>
-                    <div style="height: 1px; background: var(--border-subtle);"></div>
-                    <label style="display: flex; align-items: center; justify-content: space-between; cursor: pointer;">
-                        <div>
-                            <div style="font-weight: 600; font-size: 0.88rem;">CityFame Creator Updates</div>
-                            <div style="font-size: 0.76rem; color: var(--text-muted);">Tips, features and creator news</div>
-                        </div>
-                        <input type="checkbox" checked style="width: 18px; height: 18px; accent-color: #000;">
-                    </label>
+                        <button onclick="subscribeToWebPush()" class="btn-primary btn-sm" style="width: auto; padding: 6px 14px; font-size: 0.78rem;">Allow Push</button>
+                    </div>
                 </div>
             </div>
 

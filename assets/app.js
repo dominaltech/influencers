@@ -335,5 +335,89 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
+// 6. Web Push VAPID Notification Helpers
+const CITYFAME_VAPID_PUBLIC_KEY = "BEGBHbJ1d22Ltg2UKWJguEG3rOKv8IwDn9lhqNp3f-ZTqE0wNRx1SHi31zWUed4lQ5nO-GipaosmpEUEOGA0BiI";
+
+function urlBase64ToUint8Array(base64String) {
+    const padding = '='.repeat((4 - base64String.length % 4) % 4);
+    const base64 = (base64String + padding)
+        .replace(/\-/g, '+')
+        .replace(/_/g, '/');
+
+    const rawData = window.atob(base64);
+    const outputArray = new Uint8Array(rawData.length);
+
+    for (let i = 0; i < rawData.length; ++i) {
+        outputArray[i] = rawData.charCodeAt(i);
+    }
+    return outputArray;
+}
+
+async function subscribeToWebPush(silent = false) {
+    if (!('serviceWorker' in navigator) || !('PushManager' in window)) {
+        if (!silent) showToast("Push notifications are not supported on this browser.", false);
+        return false;
+    }
+
+    try {
+        const permission = await Notification.requestPermission();
+        if (permission !== 'granted') {
+            if (!silent) showToast("Notification permission denied.", false);
+            return false;
+        }
+
+        const registration = await navigator.serviceWorker.ready;
+        let subscription = await registration.pushManager.getSubscription();
+
+        if (!subscription) {
+            const convertedVapidKey = urlBase64ToUint8Array(CITYFAME_VAPID_PUBLIC_KEY);
+            subscription = await registration.pushManager.subscribe({
+                userVisibleOnly: true,
+                applicationServerKey: convertedVapidKey
+            });
+        }
+
+        // Save subscription to logged in creator's profile in Supabase
+        const creatorData = localStorage.getItem('cityfame_creator');
+        if (creatorData && window.cityfameSupabase) {
+            try {
+                const creator = JSON.parse(creatorData);
+                if (creator && creator.id) {
+                    await window.cityfameSupabase
+                        .from('influencers')
+                        .update({ push_subscription: subscription })
+                        .eq('id', creator.id);
+
+                    creator.push_subscription = subscription;
+                    localStorage.setItem('cityfame_creator', JSON.stringify(creator));
+                }
+            } catch (e) {}
+        }
+
+        if (!silent) showToast("Push Notifications enabled!");
+        return true;
+    } catch (err) {
+        console.error("Web Push Subscription Error:", err);
+        if (!silent) showToast("Failed to enable push notifications: " + err.message, false);
+        return false;
+    }
+}
+
+async function triggerServerlessPushNotification(influencerId, brandName, message) {
+    try {
+        await fetch('/api/send-push', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                influencer_id: influencerId,
+                brand_name: brandName,
+                message: message
+            })
+        });
+    } catch (err) {
+        console.warn("Serverless Push trigger warning:", err);
+    }
+}
+
 
 

@@ -82,4 +82,57 @@ self.addEventListener('fetch', (event) => {
     );
 });
 
+// Push Event - Receive & Display Native Android/Web Push Notifications
+self.addEventListener('push', (event) => {
+    let data = {
+        title: 'CityFame Notification',
+        body: 'You have a new brand enquiry on CityFame',
+        icon: '/logo.png',
+        badge: '/logo.png',
+        vibrate: [200, 100, 200],
+        data: { url: '/enquiries.html' }
+    };
+
+    if (event.data) {
+        try {
+            data = Object.assign(data, event.data.json());
+        } catch (e) {
+            data.body = event.data.text();
+        }
+    }
+
+    const options = {
+        body: data.body,
+        icon: data.icon || '/logo.png',
+        badge: data.badge || '/logo.png',
+        vibrate: data.vibrate || [200, 100, 200],
+        tag: 'cityfame-push-notification',
+        renotify: true,
+        data: data.data || { url: '/enquiries.html' }
+    };
+
+    event.waitUntil(
+        self.registration.showNotification(data.title, options)
+    );
+});
+
+// Notification Click Event - Open App or Enquiries Page
+self.addEventListener('notificationclick', (event) => {
+    event.notification.close();
+    const targetUrl = (event.notification.data && event.notification.data.url) ? event.notification.data.url : '/enquiries.html';
+
+    event.waitUntil(
+        clients.matchAll({ type: 'window', includeUncontrolled: true }).then((clientList) => {
+            for (const client of clientList) {
+                if (client.url.includes(targetUrl) && 'focus' in client) {
+                    return client.focus();
+                }
+            }
+            if (clients.openWindow) {
+                return clients.openWindow(targetUrl);
+            }
+        })
+    );
+});
+
 

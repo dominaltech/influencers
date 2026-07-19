@@ -1,0 +1,13 @@
+{
+  "name": "cityfame",
+  "version": "1.0.0",
+  "description": "CityFame - Solapur Influencer Directory & PWA",
+  "private": true,
+  "scripts": {
+    "start": "serve ."
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.48.1",
+    "web-push": "^3.6.7"
+  }
+}

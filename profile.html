@@ -298,6 +298,8 @@
                         }]);
 
                     if (error) throw error;
+                    // Trigger web push notification to creator
+                    triggerServerlessPushNotification(currentInfluencerId, name, message);
                 } catch (err) {
                     console.warn("Supabase enquiry fallback:", err);
                 }
