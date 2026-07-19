@@ -419,5 +419,91 @@ async function triggerServerlessPushNotification(influencerId, brandName, messag
     }
 }
 
+// 7. Automatic Background Enquiry Poller & Native System Notification Trigger
+let lastNotifiedEnquiryId = localStorage.getItem('cityfame_last_enquiry_id') || null;
+
+async function checkAndNotifyNewEnquiries() {
+    const creatorData = localStorage.getItem('cityfame_creator');
+    if (!creatorData || !window.cityfameSupabase) return;
+
+    try {
+        const creator = JSON.parse(creatorData);
+        if (!creator || !creator.id) return;
+
+        const { data: latestEnquiries, error } = await window.cityfameSupabase
+            .from('enquiries')
+            .select('*')
+            .eq('influencer_id', creator.id)
+            .order('created_at', { ascending: false })
+            .limit(1);
+
+        if (error || !latestEnquiries || latestEnquiries.length === 0) return;
+
+        const newest = latestEnquiries[0];
+        if (!lastNotifiedEnquiryId) {
+            // Store initial baseline without firing notification for past enquiries
+            lastNotifiedEnquiryId = newest.id;
+            localStorage.setItem('cityfame_last_enquiry_id', newest.id);
+            return;
+        }
+
+        if (newest.id !== lastNotifiedEnquiryId) {
+            lastNotifiedEnquiryId = newest.id;
+            localStorage.setItem('cityfame_last_enquiry_id', newest.id);
+
+            // Display Native System Notification
+            showNativeSystemNotification(
+                `New Brand Enquiry from ${newest.name || 'a Client'}!`,
+                newest.message || 'Tap to view collaboration details',
+                '/enquiries.html'
+            );
+        }
+    } catch (e) {
+        console.warn("Background notification check warning:", e);
+    }
+}
+
+function showNativeSystemNotification(title, body, targetUrl = '/enquiries.html') {
+    if (!('Notification' in window)) return;
+
+    if (Notification.permission === 'granted') {
+        const options = {
+            body: body,
+            icon: '/logo.png',
+            badge: '/logo.png',
+            vibrate: [200, 100, 200],
+            tag: 'cityfame-enquiry-alert',
+            renotify: true,
+            data: { url: targetUrl }
+        };
+
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.ready.then(reg => {
+                reg.showNotification(title, options);
+            }).catch(() => {
+                new Notification(title, options);
+            });
+        } else {
+            new Notification(title, options);
+        }
+    }
+}
+
+// Start background poller and listen for realtime changes
+document.addEventListener('DOMContentLoaded', () => {
+    // Check for new enquiries on page load
+    setTimeout(checkAndNotifyNewEnquiries, 2000);
+    // Poll every 10 seconds in background
+    setInterval(checkAndNotifyNewEnquiries, 10000);
+
+    // Auto-prompt creator for notification permission on initial load if logged in
+    const creator = localStorage.getItem('cityfame_creator');
+    if (creator && 'Notification' in window && Notification.permission === 'default') {
+        setTimeout(() => {
+            subscribeToWebPush(true);
+        }, 4000);
+    }
+});
+
 
 
