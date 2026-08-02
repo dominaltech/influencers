@@ -193,6 +193,20 @@
                     </div>
 
                     <div class="form-group">
+                        <label class="form-label">Primary Creator Category</label>
+                        <select id="sup-category" class="custom-select" required>
+                            <option value="All-Rounder / General">🌟 All Categories / General Content</option>
+                            <option value="Fashion & Lifestyle">👗 Fashion & Lifestyle</option>
+                            <option value="Foodie & Vlogs">🍕 Foodie & Local Vlogs</option>
+                            <option value="Reels & Entertainment">🎬 Reels, Acting & Entertainment</option>
+                            <option value="Tech & Gaming">⚡ Tech, Gadgets & Gaming</option>
+                            <option value="Fitness & Health">💪 Fitness & Health</option>
+                            <option value="Local Business & Promotions">📍 Local Business & Store Reviews</option>
+                            <option value="Other">✨ Other Creator Niche</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
                         <label class="form-label">Overall Followers Count</label>
                         <input type="number" id="sup-followers" class="form-control" placeholder="e.g. 25000" min="0" required>
                     </div>
@@ -331,6 +345,20 @@
                                 </div>
                             </div>
 
+                            <div class="form-group">
+                                <label class="form-label">Primary Creator Category</label>
+                                <select id="edit-category" class="custom-select" required>
+                                    <option value="All-Rounder / General">🌟 All Categories / General Content</option>
+                                    <option value="Fashion & Lifestyle">👗 Fashion & Lifestyle</option>
+                                    <option value="Foodie & Vlogs">🍕 Foodie & Local Vlogs</option>
+                                    <option value="Reels & Entertainment">🎬 Reels, Acting & Entertainment</option>
+                                    <option value="Tech & Gaming">⚡ Tech, Gadgets & Gaming</option>
+                                    <option value="Fitness & Health">💪 Fitness & Health</option>
+                                    <option value="Local Business & Promotions">📍 Local Business & Store Reviews</option>
+                                    <option value="Other">✨ Other Creator Niche</option>
+                                </select>
+                            </div>
+
                             <div class="filter-row" style="margin-bottom: 12px;">
                                 <div class="form-group" style="margin: 0; flex: 1;">
                                     <label class="form-label">Followers Count</label>
@@ -421,22 +449,30 @@
             </section>
         </main>
 
-        <!-- Bottom Tab Bar -->
+        <!-- Flutter Material 3 Bottom Tab Bar -->
         <nav class="bottom-tab-bar">
             <a href="index.html" class="tab-item">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                <div class="tab-icon-wrapper">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                </div>
                 <span>Home</span>
             </a>
             <a href="influencers.html" class="tab-item active">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                <div class="tab-icon-wrapper">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                </div>
                 <span>Creators</span>
             </a>
             <a href="enquiries.html" class="tab-item">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+                <div class="tab-icon-wrapper">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+                </div>
                 <span>Inbox</span>
             </a>
             <a href="settings.html" class="tab-item">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+                <div class="tab-icon-wrapper">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+                </div>
                 <span>Settings</span>
             </a>
         </nav>
@@ -545,6 +581,7 @@
             const password = document.getElementById('sup-password').value;
             const phone = document.getElementById('sup-phone').value.trim();
             const handle = document.getElementById('sup-handle').value.trim();
+            const category = document.getElementById('sup-category') ? document.getElementById('sup-category').value : 'All-Rounder / General';
             const followers = parseInt(document.getElementById('sup-followers').value);
             const views = parseInt(document.getElementById('sup-views').value);
             const totalViews = parseInt(document.getElementById('sup-totalviews').value) || 0;
@@ -581,6 +618,7 @@
                             password: password,
                             contact_number: phone,
                             instagram_handle: handle,
+                            category: category,
                             city: 'Solapur',
                             state: 'Maharashtra',
                             followers_count: followers,
@@ -748,6 +786,9 @@
             document.getElementById('edit-fullname').value = currentProfile.full_name || '';
             document.getElementById('edit-handle').value = currentProfile.instagram_handle || '';
             document.getElementById('edit-phone').value = currentProfile.contact_number || '';
+            if (document.getElementById('edit-category')) {
+                document.getElementById('edit-category').value = currentProfile.category || 'All-Rounder / General';
+            }
             document.getElementById('edit-followers').value = currentProfile.followers_count || '';
             document.getElementById('edit-views').value = currentProfile.avg_views || '';
             document.getElementById('edit-totalviews').value = currentProfile.total_views || '';
@@ -762,6 +803,7 @@
             const newName = document.getElementById('edit-fullname').value.trim();
             const newHandle = document.getElementById('edit-handle').value.trim();
             const newPhone = document.getElementById('edit-phone').value.trim();
+            const newCategory = document.getElementById('edit-category') ? document.getElementById('edit-category').value : 'All-Rounder / General';
             const newFollowers = parseInt(document.getElementById('edit-followers').value);
             const newViews = parseInt(document.getElementById('edit-views').value);
             const newTotalViews = parseInt(document.getElementById('edit-totalviews').value) || 0;
@@ -772,6 +814,7 @@
                 full_name: newName,
                 instagram_handle: newHandle,
                 contact_number: newPhone,
+                category: newCategory,
                 followers_count: newFollowers,
                 avg_views: newViews,
                 total_views: newTotalViews

@@ -1,6 +1,6 @@
 /* ========================================================
    CityFame - Core UI / Responsive Design System
-   Dual-Mode: Full Desktop Dashboard on PC, Native PWA App on Mobile
+   Dual-Mode: Full Desktop Dashboard on PC, Native PWA App on Mobile (Flutter/Android Aesthetic)
    ======================================================== */
 
 @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
@@ -29,21 +29,34 @@
     --radius-sm: 8px;
     --radius-md: 14px;
     --radius-lg: 20px;
+    --radius-xl: 24px;
     --radius-full: 9999px;
 
     --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.04);
     --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.06);
     --shadow-lg: 0 16px 36px rgba(0, 0, 0, 0.1);
+    --shadow-flutter: 0 6px 20px rgba(15, 23, 42, 0.08);
 
     --font-main: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+
+    /* Native Mobile Viewport Safe Insets */
+    --safe-top: env(safe-area-inset-top, 0px);
+    --safe-bottom: env(safe-area-inset-bottom, 0px);
 }
 
-/* Base Resets */
+/* Base Resets & Mobile App Boundary Lock */
 * {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
     -webkit-tap-highlight-color: transparent;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+input, textarea, select {
+    user-select: auto;
+    -webkit-user-select: auto;
 }
 
 html, body {
@@ -52,7 +65,8 @@ html, body {
     font-family: var(--font-main);
     font-size: 15px;
     line-height: 1.5;
-    min-height: 100vh;
+    min-height: 100dvh;
+    overscroll-behavior-y: none;
     -webkit-font-smoothing: antialiased;
 }
 
@@ -61,10 +75,126 @@ html, body {
     width: 100%;
     margin: 0 auto;
     background-color: var(--bg-primary);
-    min-height: 100vh;
+    min-height: 100dvh;
     display: flex;
     flex-direction: column;
     position: relative;
+    padding-top: var(--safe-top);
+}
+
+/* Flutter Micro-Animation Touch Press Effect */
+.influencer-card, .btn-primary, .btn-secondary, .tab-item, .category-pill, .icon-btn, .story-ring-item {
+    transition: transform 0.15s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.15s ease, background-color 0.15s ease;
+}
+
+.influencer-card:active, .btn-primary:active, .btn-secondary:active, .category-pill:active, .icon-btn:active {
+    transform: scale(0.97) !important;
+}
+
+/* ========================================================
+   Instagram Story Creator Ring Carousel (Top Flutter Header)
+   ======================================================== */
+.story-bar-container {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 14px 20px;
+    overflow-x: auto;
+    background: var(--bg-primary);
+    border-bottom: 1px solid var(--border-subtle);
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+.story-bar-container::-webkit-scrollbar {
+    display: none;
+}
+
+.story-ring-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+    flex-shrink: 0;
+    text-decoration: none;
+}
+
+.story-ring-avatar-wrapper {
+    position: relative;
+    padding: 2.5px;
+    background: var(--accent-gradient);
+    border-radius: var(--radius-full);
+    box-shadow: 0 3px 10px rgba(220, 39, 67, 0.25);
+}
+
+.story-ring-avatar-wrapper.unseen {
+    background: var(--accent-gradient);
+}
+
+.story-ring-avatar-wrapper.seen {
+    background: var(--border-color);
+}
+
+.story-ring-avatar {
+    width: 58px;
+    height: 58px;
+    border-radius: var(--radius-full);
+    object-fit: cover;
+    border: 2px solid #ffffff;
+    display: block;
+    background: var(--bg-elevated);
+}
+
+.story-ring-name {
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    max-width: 68px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    text-align: center;
+}
+
+/* ========================================================
+   Category Filter Chips (Flutter TabBar / Filter Pills)
+   ======================================================== */
+.category-pills-scroll {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    overflow-x: auto;
+    padding: 4px 2px 10px 2px;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+.category-pills-scroll::-webkit-scrollbar {
+    display: none;
+}
+
+.category-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 16px;
+    border-radius: var(--radius-full);
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    color: var(--text-secondary);
+    font-size: 0.82rem;
+    font-weight: 700;
+    cursor: pointer;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+.category-pill.active {
+    background: var(--accent-black);
+    color: #ffffff;
+    border-color: var(--accent-black);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
 /* Top Navbar */
@@ -529,7 +659,7 @@ html, body {
     transform: scale(1);
 }
 
-/* On Mobile Screens (<768px), convert modal to bottom sheet */
+/* On Mobile Screens (<768px), convert modal to Flutter Bottom Sheet */
 @media (max-width: 767px) {
     .modal-overlay {
         align-items: flex-end;
@@ -538,15 +668,27 @@ html, body {
     
     .modal-sheet {
         max-width: 100%;
+        border-top-left-radius: var(--radius-xl);
+        border-top-right-radius: var(--radius-xl);
         border-bottom-left-radius: 0;
         border-bottom-right-radius: 0;
+        padding-top: 12px;
         transform: translateY(100%);
-        transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+        padding-bottom: calc(24px + var(--safe-bottom));
     }
     
     .modal-overlay.active .modal-sheet {
         transform: translateY(0);
     }
+}
+
+.sheet-drag-handle {
+    width: 38px;
+    height: 4.5px;
+    background: var(--border-color);
+    border-radius: var(--radius-full);
+    margin: 0 auto 16px auto;
 }
 
 .modal-header {
@@ -574,23 +716,24 @@ html, body {
     background: var(--border-color);
 }
 
-/* Bottom Navigation Bar (Visible ONLY on Mobile <768px) */
+/* Bottom Navigation Bar (Visible ONLY on Mobile <768px - Flutter Material 3 style) */
 .bottom-tab-bar {
     position: fixed;
     bottom: 0;
     left: 0;
     right: 0;
     width: 100%;
-    height: 68px;
-    background-color: rgba(255, 255, 255, 0.95);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    border-top: 1px solid var(--border-color);
+    height: calc(64px + var(--safe-bottom));
+    background-color: rgba(255, 255, 255, 0.96);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-top: 1px solid var(--border-subtle);
     display: flex;
     align-items: center;
     justify-content: space-around;
     z-index: 100;
-    padding-bottom: env(safe-area-inset-bottom, 0px);
+    padding-bottom: var(--safe-bottom);
+    box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.04);
 }
 
 @media (min-width: 768px) {
@@ -609,7 +752,7 @@ html, body {
     }
     
     .app-container {
-        padding-bottom: 80px;
+        padding-bottom: calc(76px + var(--safe-bottom));
     }
 }
 
@@ -621,21 +764,35 @@ html, body {
     gap: 3px;
     text-decoration: none;
     color: var(--text-muted);
-    font-size: 0.72rem;
-    font-weight: 600;
+    font-size: 0.7rem;
+    font-weight: 700;
     flex: 1;
     height: 100%;
+    position: relative;
     transition: color 0.2s ease;
+}
+
+.tab-icon-wrapper {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 4px 14px;
+    border-radius: var(--radius-full);
+    transition: background-color 0.2s ease, transform 0.15s ease;
 }
 
 .tab-item svg {
     width: 22px;
     height: 22px;
-    stroke-width: 2;
+    stroke-width: 2.2;
 }
 
 .tab-item.active {
     color: var(--accent-black);
+}
+
+.tab-item.active .tab-icon-wrapper {
+    background: var(--bg-elevated);
 }
 
 .tab-item.active svg {
