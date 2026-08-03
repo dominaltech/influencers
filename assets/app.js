@@ -520,5 +520,45 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
+// 9. Touch Pull-To-Refresh Gesture Helper for Mobile PWA
+(function initPullToRefresh() {
+    let touchStartY = 0;
+    let touchMoveY = 0;
+    let isPulling = false;
+
+    window.addEventListener('touchstart', (e) => {
+        if (window.scrollY === 0 || document.documentElement.scrollTop === 0) {
+            touchStartY = e.touches[0].clientY;
+            touchMoveY = touchStartY;
+            isPulling = true;
+        } else {
+            isPulling = false;
+        }
+    }, { passive: true });
+
+    window.addEventListener('touchmove', (e) => {
+        if (!isPulling) return;
+        touchMoveY = e.touches[0].clientY;
+    }, { passive: true });
+
+    window.addEventListener('touchend', () => {
+        if (!isPulling) return;
+        const pullDistance = touchMoveY - touchStartY;
+        if (pullDistance > 110 && (window.scrollY === 0 || document.documentElement.scrollTop === 0)) {
+            showToast("Refreshing feed...", true);
+            setTimeout(() => {
+                if (typeof loadInfluencers === 'function') {
+                    loadInfluencers();
+                } else {
+                    window.location.reload();
+                }
+            }, 250);
+        }
+        isPulling = false;
+        touchStartY = 0;
+        touchMoveY = 0;
+    });
+})();
+
 
 
