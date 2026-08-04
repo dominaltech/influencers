@@ -249,9 +249,9 @@ function openEnquiriesPage() {
 }
 
 // 9. Hardware & Browser Back Button History Manager
-// Native App Behavior: 
-// - Back button on any subpage (influencers, enquiries, settings, about) immediately returns to Home Page (index.html).
-// - Back button on Home Page requires double-tap within 2s to exit app.
+// Native App Navigation Rules: 
+// 1. Pressing Back on any subpage (influencers, enquiries, settings, about, profile) ALWAYS navigates directly to Home Page (index.html) without looping through last-visited pages.
+// 2. Pressing Back on Home Page (index.html) requires double-tap within 2s to exit app.
 let lastBackPressTimestamp = 0;
 
 function setupAppBackHistoryManager() {
@@ -260,7 +260,10 @@ function setupAppBackHistoryManager() {
 
     if (isHomePage) {
         // Push initial home state so Back button triggers popstate
-        history.pushState({ isHomeState: true }, '', location.href);
+        try {
+            history.replaceState({ isHomeState: true }, '', location.href);
+            history.pushState({ isHomeState: true }, '', location.href);
+        } catch (e) {}
 
         window.addEventListener('popstate', (e) => {
             const now = Date.now();
@@ -271,11 +274,18 @@ function setupAppBackHistoryManager() {
                 lastBackPressTimestamp = now;
                 showToast("Press BACK again to exit CityFame");
                 // Re-push home state to stay on home page
-                history.pushState({ isHomeState: true }, '', location.href);
+                try {
+                    history.pushState({ isHomeState: true }, '', location.href);
+                } catch (err) {}
             }
         });
     } else {
-        // Sub-pages: Pressing Back takes user straight to Home Page (index.html)
+        // Sub-pages: Replace previous subpage history entry with index.html so pressing Back ALWAYS goes straight to index.html
+        try {
+            history.replaceState({ isHomeState: true }, '', 'index.html');
+            history.pushState({ isSubPage: true }, '', location.href);
+        } catch (e) {}
+
         window.addEventListener('popstate', (e) => {
             window.location.replace('index.html');
         });
@@ -292,7 +302,6 @@ window.addEventListener('beforeinstallprompt', (e) => {
     deferredPwaInstallPrompt = e;
     console.log("CityFame PWA: Install prompt captured");
 
-    // Auto trigger prompt banner after 2.5s on home screen if not installed
     const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
     if (!isStandalone) {
         setTimeout(() => {
@@ -323,17 +332,6 @@ async function triggerPwaInstall() {
         showToast("To install, open browser menu (⋮) and tap 'Add to Home screen' or 'Install App'.");
     }
 }
-
-// Global back button override: any back navigation on sub-pages goes directly to index.html without history loop
-document.addEventListener('DOMContentLoaded', () => {
-    const currentPath = window.location.pathname.split('/').pop() || 'index.html';
-    if (currentPath !== 'index.html' && currentPath !== '') {
-        window.history.pushState({ page: 'subpage' }, '', window.location.href);
-        window.addEventListener('popstate', function(event) {
-            window.location.replace('index.html');
-        });
-    }
-});
 
 // 6. Web Push VAPID Notification Helpers
 const CITYFAME_VAPID_PUBLIC_KEY = "BEGBHbJ1d22Ltg2UKWJguEG3rOKv8IwDn9lhqNp3f-ZTqE0wNRx1SHi31zWUed4lQ5nO-GipaosmpEUEOGA0BiI";
